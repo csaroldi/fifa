@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>World Cup 2026 | Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,800;1,9..144,500&family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#0b0d11;--ink2:#11141b;--panel:#151924;--panel2:#1b2030;--line:#272d3d;--line2:#333b50;
+--txt:#eef1f7;--mut:#9aa3b8;--dim:#6b7488;--gold:#e6c069;--gold2:#caa24a;--grn:#3fae7a;
+--grnbg:rgba(63,174,122,.14);--amb:#e6c069;--ambbg:rgba(230,192,105,.13);--radius:14px}
+*{box-sizing:border-box}html,body{margin:0;padding:0}
+body{background:radial-gradient(1200px 700px at 80% -10%,rgba(230,192,105,.06),transparent 60%),radial-gradient(900px 600px at -5% 0%,rgba(63,120,174,.06),transparent 55%),var(--ink);
+color:var(--txt);font-family:"Archivo",system-ui,sans-serif;-webkit-font-smoothing:antialiased;line-height:1.45;min-height:100vh}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.035;z-index:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.wrap{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:0 18px 90px}
+header.top{padding:34px 0 18px;border-bottom:1px solid var(--line)}
+.eyebrow{font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);font-weight:700}
+h1.title{font-family:"Fraunces",serif;font-weight:800;font-size:clamp(34px,6vw,62px);line-height:.96;margin:8px 0 4px;letter-spacing:-.01em}
+h1.title span{font-style:italic;font-weight:500;color:var(--gold)}
+.sub{color:var(--mut);font-size:14px;max-width:700px}
+.hostline{margin-top:10px;display:flex;gap:14px;flex-wrap:wrap;color:var(--dim);font-size:12.5px}
+.hostline b{color:var(--txt);font-weight:600}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin:6px 0;position:sticky;top:0;z-index:30;background:linear-gradient(var(--ink),var(--ink) 72%,transparent);padding:12px 0}
+.tabs{display:inline-flex;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:4px}
+.tabs button{appearance:none;border:0;background:transparent;color:var(--mut);font-family:inherit;font-weight:600;font-size:13px;padding:9px 16px;border-radius:999px;cursor:pointer;letter-spacing:.02em;transition:.18s}
+.tabs button.on{background:linear-gradient(180deg,#2a3144,#222838);color:var(--txt);box-shadow:inset 0 0 0 1px var(--line2)}
+.tabs button:hover:not(.on){color:var(--txt)}
+.actions{display:flex;gap:9px;align-items:center}
+.progress{font-size:12px;color:var(--mut)}.progress .pill{font-family:"IBM Plex Mono",monospace;color:var(--gold);font-weight:600}
+.btn{appearance:none;border:1px solid var(--line2);background:var(--panel);color:var(--mut);font-family:inherit;font-size:12px;font-weight:600;padding:8px 12px;border-radius:9px;cursor:pointer;transition:.15s;letter-spacing:.02em}
+.btn:hover{color:var(--txt);border-color:var(--gold2)}
+.view{display:none}.view.on{display:block;animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+/* standings */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px;margin-top:6px}
+.card{background:linear-gradient(180deg,var(--panel),var(--ink2));border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.chead{display:flex;align-items:baseline;justify-content:space-between;padding:13px 15px 9px}
+.chead .g{font-family:"Fraunces",serif;font-weight:700;font-size:19px}.chead .g em{font-style:normal;color:var(--gold)}
+.chead .dates{font-size:10px;color:var(--dim);font-family:"IBM Plex Mono",monospace}
+table.stand{width:100%;border-collapse:collapse;font-size:13px}
+table.stand th{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);font-weight:700;padding:6px 3px;text-align:center;border-bottom:1px solid var(--line)}
+table.stand th.l{text-align:left;padding-left:14px}
+table.stand td{padding:8px 3px;text-align:center;border-bottom:1px solid rgba(39,45,61,.5);font-variant-numeric:tabular-nums}
+table.stand tr:last-child td{border-bottom:0}
+td.team{text-align:left;padding-left:8px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:160px}
+td.pts{font-family:"IBM Plex Mono",monospace;font-weight:600}td.gd{font-family:"IBM Plex Mono",monospace}
+.pos{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:5px;font-size:10px;font-weight:700;margin-right:7px;font-family:"IBM Plex Mono",monospace;color:var(--ink);flex:none}
+.q1 .pos,.q2 .pos{background:var(--grn)}.q3 .pos{background:var(--amb)}.q4 .pos{background:#3a4254;color:var(--mut)}
+tr.q1,tr.q2{background:var(--grnbg)}tr.q3{background:var(--ambbg)}tr.q4{opacity:.62}
+.flag{font-size:14px}.fl-r{margin-right:7px}.fl-l{margin-left:7px}
+.tiebadge{font-size:8px;letter-spacing:.06em;color:var(--gold);border:1px solid var(--gold2);border-radius:4px;padding:1px 4px;margin-left:6px;vertical-align:middle;text-transform:uppercase;font-weight:700}
+.thirds{background:linear-gradient(180deg,var(--panel),var(--ink2));border:1px solid var(--line);border-radius:var(--radius);margin-top:18px;padding:16px 18px}
+.thirds h3{font-family:"Fraunces",serif;font-weight:700;font-size:19px;margin:0 0 3px}
+.thirds p.note{color:var(--mut);font-size:12.5px;margin:0 0 12px}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:7px}
+.trow{display:flex;align-items:center;gap:9px;padding:8px 11px;border:1px solid var(--line);border-radius:9px;background:var(--ink2);font-size:13px}
+.trow.in{border-color:var(--grn);background:var(--grnbg)}
+.trow .rk{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--dim);width:16px}
+.trow.in .rk{color:var(--grn);font-weight:700}
+.trow .tnm{flex:1;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.trow .grp{font-size:10px;color:var(--dim);font-family:"IBM Plex Mono",monospace}
+.trow .pn{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--mut)}
+/* matches */
+.matchtools{display:flex;gap:8px;margin:2px 0 4px}
+.mddiv{display:flex;align-items:center;gap:12px;margin:22px 2px 8px}
+.mddiv span{font-family:"Fraunces",serif;font-style:italic;font-size:20px;color:var(--gold)}
+.mddiv::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--gold2),transparent)}
+.day{margin-bottom:8px}
+.dayhead{width:100%;display:flex;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:11px 14px;cursor:pointer;color:var(--txt);font-family:inherit;text-align:left}
+.dayhead:hover{border-color:var(--line2)}
+.dayhead .dl{font-weight:700;font-size:14px;letter-spacing:.01em}
+.dayhead .dc{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--dim)}
+.dayhead .chev{margin-left:auto;color:var(--gold);font-size:13px}
+.daybody{padding:6px 0 2px}
+.match{display:grid;grid-template-columns:62px 22px 1fr 86px auto;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid rgba(39,45,61,.45)}
+.match:last-child{border-bottom:0}
+.match.done{background:rgba(63,174,122,.05)}
+.mt{display:flex;flex-direction:column;line-height:1.25}
+.mt .bst{font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:600;color:var(--txt)}
+.mt .utc{font-family:"IBM Plex Mono",monospace;font-size:9.5px;color:var(--dim)}
+.gb{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;background:var(--panel2);border:1px solid var(--line2);font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;color:var(--gold)}
+.mteams{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px}
+.mt-home{display:flex;align-items:center;justify-content:flex-end;gap:7px;min-width:0}
+.mt-away{display:flex;align-items:center;justify-content:flex-start;gap:7px;min-width:0}
+.mteams .nm{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.msc{display:flex;align-items:center;gap:5px}
+.msc input{width:34px;height:30px;text-align:center;background:var(--panel2);border:1px solid var(--line2);color:var(--txt);border-radius:8px;font-family:"IBM Plex Mono",monospace;font-size:15px;font-weight:600;outline:none;-moz-appearance:textfield}
+.msc input::-webkit-outer-spin-button,.msc input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.msc input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(230,192,105,.12)}
+.msc input.filled{color:var(--gold)}.msc .dash{color:var(--dim);font-size:12px}
+.mv{font-size:10px;color:var(--dim);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* knockout */
+.kobanner{background:var(--ambbg);border:1px solid var(--gold2);border-radius:12px;padding:13px 16px;margin:6px 0 4px;color:var(--gold);font-size:13px;font-weight:500;display:flex;gap:10px;align-items:center}
+.rounds{display:flex;gap:18px;overflow-x:auto;padding:12px 2px 26px}
+.round{min-width:236px;flex:none}
+.rtitle{font-family:"Fraunces",serif;font-weight:700;font-size:15px;margin:0;display:flex;flex-direction:column}
+.rtitle .dt{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--dim);font-weight:400;margin-top:2px}
+.rcol{display:flex;flex-direction:column;gap:12px;margin-top:12px}
+.tie{background:linear-gradient(180deg,var(--panel),var(--ink2));border:1px solid var(--line);border-radius:11px;padding:8px 9px}
+.tie .mno{font-family:"IBM Plex Mono",monospace;font-size:8.5px;color:var(--dim);letter-spacing:.04em;margin-bottom:5px;display:flex;justify-content:space-between;gap:6px}
+.tie .mno b{color:var(--mut);font-weight:600}
+.slot{display:grid;grid-template-columns:1fr auto;align-items:center;gap:6px;padding:6px;border-radius:7px}
+.slot+.slot{margin-top:3px}
+.slot .nm{font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:6px}
+.slot .nm.tbd{color:var(--dim);font-weight:500;font-style:italic;font-size:11px}
+.slot.win{background:var(--grnbg)}.slot.win .nm{color:var(--grn)}.slot.lose{opacity:.5}
+.koin{width:30px;height:27px;text-align:center;background:var(--panel2);border:1px solid var(--line2);color:var(--txt);border-radius:7px;font-family:"IBM Plex Mono",monospace;font-size:14px;font-weight:600;outline:none;-moz-appearance:textfield}
+.koin::-webkit-outer-spin-button,.koin::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.koin:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(230,192,105,.12)}.koin:disabled{opacity:.35;cursor:not-allowed}
+.pens{display:flex;align-items:center;gap:6px;margin-top:6px;padding-top:6px;border-top:1px dashed var(--line2)}
+.pens span{font-size:9px;color:var(--dim);letter-spacing:.05em;text-transform:uppercase;font-weight:700}
+.pens button{appearance:none;border:1px solid var(--line2);background:var(--panel2);color:var(--mut);font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;padding:3px 9px;border-radius:6px;cursor:pointer}
+.pens button.on{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+.kv{font-size:9.5px;color:var(--dim);margin-top:6px;text-align:right}
+.champ{margin:14px auto 0;max-width:300px;text-align:center;padding:18px;border:1px solid var(--gold2);border-radius:12px;background:linear-gradient(180deg,rgba(230,192,105,.10),transparent)}
+.champ .lbl{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.champ .nm{font-family:"Fraunces",serif;font-weight:800;font-size:26px;margin-top:4px}
+footer{margin-top:30px;padding-top:16px;border-top:1px solid var(--line);color:var(--dim);font-size:11.5px;line-height:1.7}
+footer b{color:var(--mut)}
+@media(max-width:600px){.grid{grid-template-columns:1fr}h1.title{font-size:38px}
+.match{grid-template-columns:54px 20px 1fr;grid-row-gap:4px}.mv{grid-column:1 / -1;text-align:left;padding-left:74px}}
+/* ---- watch on ---- */
+.watch{appearance:none;background:transparent;border:1px solid transparent;color:var(--dim);font-family:inherit;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:5px 9px;border-radius:7px;cursor:pointer;transition:.18s;justify-self:end;white-space:nowrap}
+.watch:hover,.watch:focus-visible{color:var(--gold);border-color:var(--gold2);outline:none}
+.watch:active,.watch:focus-visible{box-shadow:0 0 0 3px rgba(230,192,105,.12)}
+.tie .watch{padding:2px 6px;font-size:8px;margin-left:auto}
+.tie .mno{align-items:center}
+.wscrim{position:fixed;inset:0;z-index:90;background:rgba(11,13,17,.55);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);opacity:0;transition:opacity .3s cubic-bezier(.22,1,.36,1)}
+.wscrim.on{opacity:1}
+.wsheet{position:fixed;z-index:91;left:50%;top:50%;transform:translate(-50%,-50%) scale(.96);opacity:0;width:min(440px,calc(100vw - 36px));max-height:min(80vh,640px);overflow:auto;background:linear-gradient(180deg,var(--panel),var(--ink2));border:1px solid var(--line2);border-radius:var(--radius);box-shadow:0 24px 60px -18px rgba(0,0,0,.65);transition:transform .3s cubic-bezier(.22,1,.36,1),opacity .3s cubic-bezier(.22,1,.36,1);padding:14px 18px 18px}
+.wsheet::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.035;border-radius:inherit;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.wsheet::after{content:"";position:absolute;left:0;right:0;top:0;height:54px;pointer-events:none;border-radius:inherit;background:linear-gradient(180deg,rgba(255,255,255,.05),transparent)}
+.wsheet.on{transform:translate(-50%,-50%) scale(1);opacity:1}
+.wgrab{display:none}
+.whead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;position:relative;z-index:1}
+.weyebrow{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.wtitle{font-family:"Fraunces",serif;font-style:italic;font-weight:500;font-size:21px;margin-top:5px;line-height:1.25}
+.wmeta{font-family:"IBM Plex Mono",monospace;font-size:10.5px;color:var(--dim);margin-top:6px}
+.wclose{appearance:none;border:1px solid var(--line2);background:var(--panel2);color:var(--mut);width:30px;height:30px;border-radius:9px;cursor:pointer;font-size:15px;line-height:1;flex:none;transition:.15s}
+.wclose:hover{color:var(--txt);border-color:var(--gold2)}
+.wregion{display:inline-flex;background:var(--ink2);border:1px solid var(--line);border-radius:999px;padding:3px;margin-top:13px;position:relative;z-index:1}
+.wregion button{appearance:none;border:0;background:transparent;color:var(--mut);font-family:inherit;font-size:11.5px;font-weight:600;padding:6px 14px;border-radius:999px;cursor:pointer;transition:.18s}
+.wregion button.on{background:linear-gradient(180deg,#2a3144,#222838);color:var(--txt);box-shadow:inset 0 0 0 1px var(--line2)}
+.wnote{font-size:10.5px;color:var(--dim);margin-top:8px;position:relative;z-index:1}
+.wlist{margin-top:12px;display:flex;flex-direction:column;gap:7px;position:relative;z-index:1}
+.wrow{display:flex;align-items:center;gap:11px;padding:10px 11px;border:1px solid var(--line);border-radius:10px;background:var(--ink2);text-decoration:none;color:var(--txt);opacity:0;transform:translateY(8px);animation:win .35s cubic-bezier(.22,1,.36,1) forwards;transition:border-color .15s}
+a.wrow:hover{border-color:var(--gold2)}
+@keyframes win{to{opacity:1;transform:none}}
+.wmono{width:38px;height:38px;flex:none;border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:10.5px;border:1px solid var(--line2);letter-spacing:.02em}
+.wmain{flex:1;min-width:0}
+.wname{font-weight:600;font-size:13.5px}
+.wdesc{font-size:11px;color:var(--mut);margin-top:1px}
+.wpill{flex:none;font-size:9px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;padding:3px 8px;border-radius:999px}
+.wpill.free{color:var(--grn);background:var(--grnbg);border:1px solid rgba(63,174,122,.35)}
+.wpill.paid{color:var(--mut);background:var(--panel2);border:1px solid var(--line2)}
+.wpill.tbc{color:var(--gold);background:var(--ambbg);border:1px solid var(--gold2)}
+@media(max-width:600px){
+.wsheet{left:0;right:0;top:auto;bottom:0;width:auto;max-height:84vh;transform:translateY(100%);border-radius:16px 16px 0 0;border-bottom:0;padding-bottom:max(18px,env(safe-area-inset-bottom))}
+.wsheet.on{transform:none}
+.wgrab{display:block;width:44px;height:4px;border-radius:999px;background:var(--line2);margin:2px auto 12px;position:relative;z-index:1}
+.mv{grid-column:1/3}
+.match .watch{grid-column:3;grid-row:2;justify-self:end;align-self:center;padding:3px 8px}
+}
+/* ---- today hero ---- */
+.hero{background:linear-gradient(180deg,rgba(230,192,105,.10),rgba(230,192,105,.02) 45%,transparent 75%),linear-gradient(180deg,var(--panel),var(--ink2));border:1px solid var(--gold2);border-radius:var(--radius);padding:2px 12px 4px;margin:6px 0 16px;position:relative;overflow:hidden}
+.hero:empty{display:none}
+.hero::after{content:"";position:absolute;left:0;right:0;top:0;height:46px;pointer-events:none;background:linear-gradient(180deg,rgba(255,255,255,.05),transparent)}
+.herohead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:11px 2px 8px;border-bottom:1px solid var(--line);position:relative;z-index:1}
+.herohead .he{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.herohead .hd{font-family:"Fraunces",serif;font-style:italic;font-weight:500;font-size:17px;margin-left:10px}
+.herohead .hc{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--dim);white-space:nowrap}
+.hero .match{position:relative;z-index:1}
+.hero>.match:last-child,.hero .hkwrap:last-child .match{border-bottom:0}
+.hlive{display:inline-flex;align-items:center;gap:6px;font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--gold);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.hlive::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 0 rgba(230,192,105,.45);animation:hpulse 1.7s cubic-bezier(.22,1,.36,1) infinite}
+@keyframes hpulse{0%{box-shadow:0 0 0 0 rgba(230,192,105,.45)}70%{box-shadow:0 0 0 6px rgba(230,192,105,0)}100%{box-shadow:0 0 0 0 rgba(230,192,105,0)}}
+.hft{font-family:"IBM Plex Mono",monospace;font-size:9px;color:var(--grn);font-weight:700;letter-spacing:.1em}
+.gbk{width:auto;min-width:22px;padding:0 5px;font-size:9px;letter-spacing:.04em}
+.heronone{padding:13px 2px;color:var(--mut);font-size:13px;line-height:1.6;position:relative;z-index:1}
+.heronone b{color:var(--txt)}
+.heronone .nx{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--gold)}
+.hero .pens{margin:0 12px 8px;padding-top:8px;position:relative;z-index:1}
+/* hero scale-up */
+.hero{padding:4px 14px 8px;box-shadow:0 18px 44px -22px rgba(0,0,0,.55)}
+.herohead{padding:13px 2px 10px}
+.herohead .hd{font-size:22px;margin-left:12px}
+.hero .match{grid-template-columns:74px 26px 1fr 92px auto;padding:13px 12px;gap:12px}
+.hero .mt .bst{font-size:15px}
+.hero .mt .utc{font-size:10px}
+.hero .gb{width:26px;height:26px;font-size:12px}
+.hero .gbk{width:auto;min-width:26px;font-size:10px}
+.hero .mteams .nm{font-size:15.5px;font-weight:700}
+.hero .flag{font-size:17px}
+.hero .msc input{width:42px;height:36px;font-size:17px;border-radius:9px}
+.hero .mv{font-size:11px}
+.hero .watch{font-size:10px}
+.hero .hlive{font-size:11px}
+.heronone{font-size:14px;padding:15px 2px}
+@media(max-width:600px){
+.hero .match{grid-template-columns:58px 22px 1fr;grid-row-gap:7px;padding:12px 8px;gap:10px}
+.hero .mteams{grid-column:1/-1;grid-row:2}
+.hero .mv{grid-column:1/3;grid-row:3;padding-left:0}
+.hero .match .watch{grid-column:3;grid-row:3;justify-self:end}
+.hero .mteams .nm{font-size:14.5px}
+.hero .msc input{width:40px;height:34px;font-size:15px}
+.herohead .hd{font-size:18px}
+}
+
+/* ---- premium pass: control-room polish ---- */
+:root{--shine:rgba(255,255,255,.075);--glass:rgba(255,255,255,.045);--glow:rgba(230,192,105,.18);--greenGlow:rgba(63,174,122,.18);--ease:cubic-bezier(.22,1,.36,1)}
+body{background:radial-gradient(900px 520px at 68% -12%,rgba(230,192,105,.11),transparent 60%),radial-gradient(900px 520px at 2% 8%,rgba(63,174,122,.075),transparent 56%),linear-gradient(180deg,#11141b 0%,#0b0d11 42%,#07090d 100%)}
+.wrap{max-width:1340px}.top{position:relative}.top::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:linear-gradient(90deg,transparent,var(--gold2),transparent);opacity:.55}
+.eyebrow{display:inline-flex;align-items:center;gap:10px}.eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 18px var(--glow)}
+h1.title{text-wrap:balance}.sub{font-size:15px;color:#b5bed1}.hostline{gap:10px}.hostline span{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);border-radius:999px;padding:5px 9px}
+.bar{top:0;background:linear-gradient(180deg,rgba(11,13,17,.94),rgba(11,13,17,.82) 72%,rgba(11,13,17,0));backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding:14px 0 16px;margin-bottom:2px}.tabs{box-shadow:0 14px 34px -24px #000,inset 0 1px 0 rgba(255,255,255,.04)}.tabs button{position:relative}.tabs button.on{background:linear-gradient(180deg,#343b50,#202637);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 10px 24px -18px var(--glow)}.tabs button.on::after{content:"";position:absolute;left:18px;right:18px;bottom:4px;height:2px;border-radius:999px;background:linear-gradient(90deg,transparent,var(--gold),transparent);animation:tabBeam .28s var(--ease) both}@keyframes tabBeam{from{opacity:0;transform:scaleX(.25)}to{opacity:1;transform:scaleX(1)}}
+.btn,.watch,.dayhead,.tabs button{will-change:transform}.btn:focus-visible,.tabs button:focus-visible,.watch:focus-visible,.dayhead:focus-visible,input:focus-visible{outline:2px solid rgba(230,192,105,.72);outline-offset:2px}.btn:hover,.watch:hover{transform:translateY(-1px)}
+.pulse{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:4px 0 18px}.pulse-card{position:relative;overflow:hidden;border:1px solid rgba(230,192,105,.16);border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.025)),linear-gradient(135deg,rgba(230,192,105,.075),transparent 46%);box-shadow:0 18px 40px -30px #000;padding:14px 15px;min-height:96px}.pulse-card::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 20%,rgba(255,255,255,.055),transparent 48%);opacity:.55;pointer-events:none}.pulse-k{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:800}.pulse-v{font-family:"Fraunces",serif;font-weight:800;font-size:clamp(22px,2.6vw,34px);line-height:1;margin-top:10px;letter-spacing:-.025em}.pulse-s{font-size:11.5px;color:var(--mut);margin-top:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pulse-bar{height:5px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:12px}.pulse-fill{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,var(--grn),var(--gold))}
+.stats-top{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin:6px 0 16px;padding:18px 20px;border:1px solid rgba(230,192,105,.18);border-radius:var(--radius);background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02)),linear-gradient(135deg,rgba(230,192,105,.09),transparent 55%);box-shadow:0 18px 44px -32px #000}.stats-kicker{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);font-weight:800}.stats-top h2{font-family:"Fraunces",serif;font-size:clamp(28px,4vw,46px);line-height:.98;letter-spacing:-.02em;margin:8px 0 6px}.stats-top p{color:var(--mut);font-size:13px;max-width:720px;margin:0}.stats-badge{flex:none;font-family:"IBM Plex Mono",monospace;font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);border:1px solid var(--gold2);border-radius:999px;padding:7px 10px;background:var(--ambbg)}.stats-pulse{margin-top:0}.stats-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.stats-card{background:linear-gradient(180deg,var(--panel),var(--ink2));border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;min-height:220px}.stats-card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 15px 10px;border-bottom:1px solid rgba(39,45,61,.75)}.stats-card-head h3{font-family:"Fraunces",serif;font-size:18px;margin:0}.stats-card-head span{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--gold);letter-spacing:.1em;text-transform:uppercase}.stats-list{padding:10px 12px 12px;display:flex;flex-direction:column;gap:7px}.stats-row{display:grid;grid-template-columns:26px 1fr auto;gap:9px;align-items:center;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.035);padding:9px 10px}.stats-row .rk{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--dim)}.stats-row .name{font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.stats-row .val{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--gold);font-weight:700}.stats-empty{padding:14px 15px;color:var(--dim);font-size:12.5px;line-height:1.5}.stats-card-note{padding:0 15px 15px}.stats-card-note p{font-size:13px;color:var(--mut);line-height:1.6;margin:14px 0 0}.stats-card-note{grid-column:1/-1;min-height:auto}@media(max-width:900px){.stats-grid{grid-template-columns:1fr}.stats-top{align-items:flex-start;flex-direction:column}.stats-badge{align-self:flex-start}}
+.view.on{animation:viewPremiumIn .34s var(--ease) both}@keyframes viewPremiumIn{from{opacity:0;transform:translateY(12px) scale(.992);filter:blur(2px)}to{opacity:1;transform:none;filter:none}}.view.on .card,.view.on .day,.view.on .round,.view.on .thirds{animation:surfaceIn .42s var(--ease) both}.view.on .card:nth-child(2n),.view.on .day:nth-child(2n),.view.on .round:nth-child(2n){animation-delay:.035s}.view.on .card:nth-child(3n),.view.on .day:nth-child(3n),.view.on .round:nth-child(3n){animation-delay:.07s}@keyframes surfaceIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.card,.thirds,.dayhead,.tie,.hero,.wsheet{box-shadow:0 18px 42px -30px #000,inset 0 1px 0 rgba(255,255,255,.035)}.card,.thirds,.tie{background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015)),linear-gradient(180deg,var(--panel),var(--ink2))}.card{transition:transform .18s var(--ease),border-color .18s var(--ease),box-shadow .18s var(--ease)}.card:hover{transform:translateY(-2px);border-color:rgba(230,192,105,.24);box-shadow:0 24px 54px -34px #000,inset 0 1px 0 rgba(255,255,255,.05)}.chead{background:linear-gradient(180deg,rgba(255,255,255,.035),transparent)}table.stand tr{transition:background .18s var(--ease),opacity .18s var(--ease)}table.stand tbody tr:hover{background:rgba(230,192,105,.075)}
+.match{position:relative;border-bottom-color:rgba(255,255,255,.07);transition:background .16s var(--ease),transform .16s var(--ease)}.match:hover{background:rgba(255,255,255,.035)}.match.done{background:linear-gradient(90deg,rgba(63,174,122,.11),rgba(63,174,122,.025))}.dayhead{background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.018)),var(--panel);transition:transform .16s var(--ease),border-color .16s var(--ease)}.dayhead:hover{transform:translateY(-1px);border-color:rgba(230,192,105,.22)}.mddiv{margin-top:26px}.mddiv span{letter-spacing:-.01em}
+.hero{border-color:rgba(230,192,105,.48);background:radial-gradient(600px 160px at 50% 0%,rgba(230,192,105,.18),transparent 70%),linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.018)),linear-gradient(180deg,var(--panel),var(--ink2));box-shadow:0 28px 70px -42px var(--glow),0 18px 44px -26px #000}.herohead .he{color:#ffe3a2}.herohead .hd{letter-spacing:-.02em}.heronone{border:1px solid rgba(255,255,255,.08);border-radius:11px;background:rgba(255,255,255,.025);padding:14px 13px;margin:11px 0 6px}
+.watch{border-color:rgba(230,192,105,.18);background:rgba(230,192,105,.055);color:#d5bc78}.watch:hover{background:rgba(230,192,105,.10);color:#ffe3a2}.msc input,.koin{transition:border-color .16s var(--ease),box-shadow .16s var(--ease),background .16s var(--ease)}.msc input.filled,.koin:not(:placeholder-shown){background:rgba(230,192,105,.075)}
+.kobanner{box-shadow:0 18px 42px -30px var(--glow)}.rounds{scrollbar-width:thin;scrollbar-color:var(--line2) transparent}.tie{transition:transform .16s var(--ease),border-color .16s var(--ease)}.tie:hover{transform:translateY(-1px);border-color:rgba(230,192,105,.22)}.champ{box-shadow:0 26px 68px -42px var(--glow)}
+@media(max-width:900px){.pulse{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.pulse{grid-template-columns:1fr}.pulse-card{min-height:86px}.bar{align-items:stretch}.tabs{width:100%;display:grid;grid-template-columns:repeat(4,1fr)}.tabs button{padding-left:8px;padding-right:8px}.actions{width:100%;justify-content:space-between}.hostline span{width:100%}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.btn:hover,.watch:hover,.card:hover,.dayhead:hover,.tie:hover{transform:none!important}}
+
+
+/* ---- stats v2: goalscorers, discipline and highlight queue ---- */
+td.team{text-align:left}.stats-grid-premium{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}.stats-card-wide{min-height:260px}.stats-card-full{grid-column:1/-1}.stats-card-head .stats-head-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.stats-mini-btn{font-size:10px;padding:6px 9px;border-radius:8px}.stats-help{padding:10px 15px 0;color:var(--dim);font-size:12px;line-height:1.45}.stats-table-head{display:grid;grid-template-columns:34px 1.5fr .9fr 70px;gap:9px;padding:10px 12px 0;color:var(--dim);font-family:"IBM Plex Mono",monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;font-weight:700}.stats-scroll{max-height:444px;overflow:auto;scrollbar-width:thin;padding-right:8px}.stats-scroll::-webkit-scrollbar{width:8px}.stats-scroll::-webkit-scrollbar-thumb{background:var(--line2);border-radius:999px}.stats-scorer-row{display:grid;grid-template-columns:34px 1.5fr .9fr 70px}.stats-scorer-row.top-ten{background:linear-gradient(90deg,rgba(230,192,105,.08),rgba(255,255,255,.03))}.stats-scorer-row .team-name{color:var(--mut);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.stats-card-head .stats-count{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--gold);letter-spacing:.1em;text-transform:uppercase}.discipline-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:10px 12px 12px}.discipline-block{min-width:0}.discipline-title{font-family:"IBM Plex Mono",monospace;font-size:10px;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin:0 0 7px}.discipline-row{display:grid;grid-template-columns:1fr 34px 34px;gap:8px;align-items:center;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.035);padding:9px 10px;margin-bottom:7px}.discipline-row .name{font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.discipline-row .card-stat{font-family:"IBM Plex Mono",monospace;font-size:12px;text-align:center;color:var(--gold);font-weight:700}.stats-highlight-note{margin:10px 15px 0;color:var(--mut);font-size:12px;min-height:17px}.highlight-row{display:grid;grid-template-columns:minmax(220px,1fr) 92px 94px auto;gap:10px;align-items:center;border:1px solid var(--line);border-radius:11px;background:rgba(255,255,255,.035);padding:10px 11px}.highlight-fixture{font-weight:800;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.highlight-score{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--dim);white-space:nowrap}.highlight-status{justify-self:start;font-family:"IBM Plex Mono",monospace;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border-radius:999px;padding:4px 8px;border:1px solid var(--line2);color:var(--mut);background:var(--panel2)}.highlight-status.ready{color:var(--grn);border-color:rgba(63,174,122,.42);background:var(--grnbg)}.highlight-status.missing{color:var(--gold);border-color:var(--gold2);background:var(--ambbg)}.highlight-action{justify-self:end;display:flex;align-items:center;gap:6px;flex-wrap:nowrap}.highlight-action a,.highlight-action button{appearance:none;text-decoration:none;border:1px solid var(--line2);background:var(--panel2);color:var(--mut);font-family:inherit;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:7px 10px;border-radius:8px;cursor:pointer;transition:.15s;white-space:nowrap}.highlight-action a:hover,.highlight-action button:hover{color:var(--txt);border-color:var(--gold2)}.stats-source-card p{margin:0}.stats-json-hint{margin-top:12px;padding:10px 12px;border:1px dashed var(--line2);border-radius:10px;color:var(--dim);font-family:"IBM Plex Mono",monospace;font-size:10.5px;line-height:1.6;background:rgba(255,255,255,.025)}@media(max-width:900px){.stats-grid-premium{grid-template-columns:1fr}.discipline-wrap{grid-template-columns:1fr}.highlight-row{grid-template-columns:1fr auto;gap:6px}.highlight-score{grid-column:1}.highlight-status{grid-column:1}.highlight-action{grid-column:2;grid-row:1 / span 3;align-self:center;flex-direction:column;align-items:stretch}}@media(max-width:520px){.stats-table-head,.stats-scorer-row{grid-template-columns:28px 1fr 58px}.stats-table-head .hide-sm,.stats-scorer-row .team-name{display:none}.highlight-row{grid-template-columns:1fr}.highlight-action{grid-column:1;grid-row:auto;justify-self:start}}
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow" data-i18n="eyebrow">FIFA World Cup &middot; Canada &middot; Mexico &middot; United States</div>
+    <h1 class="title" data-i18n-html="title">World Cup <span>26</span> Tracker</h1>
+    <div class="sub" data-i18n="sub">Enter scores on the Matches tab as games kick off. Standings, the third-place race and the knockout bracket all update themselves under the official 2026 rules.</div>
+    <div class="hostline"><span data-i18n-html="host_teams">48 teams &middot; <b>12 groups</b></span><span data-i18n="host_matches">104 matches</span><span data-i18n-html="host_dates">11 Jun to <b>19 Jul 2026</b></span><span id="timesNote"></span></div>
+  </header>
+  <div class="bar">
+    <div class="tabs">
+      <button id="tabG" class="on" onclick="show('G')" data-i18n="tab_groups">Group Stage</button>
+      <button id="tabM" onclick="show('M')" data-i18n="tab_matches">Matches</button>
+      <button id="tabK" onclick="show('K')" data-i18n="tab_knockout">Knockout</button>
+      <button id="tabS" onclick="show('S')" data-i18n="tab_stats">Stats</button>
+    </div>
+    <div class="actions">
+      <div class="progress"><span data-i18n="prog_label">Groups done</span> <span class="pill" id="prog">0 / 12</span></div>
+      <button class="btn" id="langBtn" onclick="toggleLang()">PT</button>
+      <button class="btn" onclick="resetAll()" data-i18n="reset_btn">Reset</button>
+    </div>
+  </div>
+  <div id="viewG" class="view on">
+    <div class="grid" id="groups"></div>
+    <div class="thirds"><h3 data-i18n="thirds_h">Race for the third-place spots</h3>
+      <p class="note" data-i18n="thirds_note">The eight best third-placed teams advance. Ranked by points, then goal difference, then goals scored (then conduct and FIFA ranking). Updates as groups finish.</p>
+      <div class="tgrid" id="thirds"></div></div>
+  </div>
+  <div id="viewM" class="view">
+    <div id="hero" class="hero"></div>
+    <div class="matchtools"><button class="btn" onclick="setAllDays(false)" data-i18n="expand_all">Expand all</button><button class="btn" onclick="setAllDays(true)" data-i18n="collapse_all">Collapse all</button></div>
+    <div id="matches"></div>
+  </div>
+  <div id="viewK" class="view">
+    <div class="kobanner" id="kobanner"></div>
+    <div class="rounds" id="bracket"></div>
+    <div id="champWrap"></div>
+  </div>
+  <div id="viewS" class="view">
+    <section class="stats-top">
+      <div>
+        <div class="stats-kicker" data-i18n="stats_kicker">Statistics hub</div>
+        <h2 data-i18n="stats_title">Tournament numbers</h2>
+        <p data-i18n="stats_intro">Offline tournament totals stay local. Online match events can later feed goalscorers, cards and highlights without touching the core tracker.</p>
+      </div>
+      <div class="stats-badge" id="statsMode" data-i18n="stats_mode">Offline core + online-ready boxes</div>
+    </section>
+    <section id="statsSummary" class="pulse stats-pulse" aria-live="polite"></section>
+    <section class="stats-grid stats-grid-premium">
+      <article class="stats-card stats-card-wide">
+        <div class="stats-card-head"><h3 data-i18n="stats_attack_h">Top attacks</h3><span data-i18n="stats_gf">GF</span></div>
+        <div class="stats-list" id="statsAttack"></div>
+      </article>
+      <article class="stats-card stats-card-wide">
+        <div class="stats-card-head"><h3 data-i18n="stats_defence_h">Best defences</h3><span data-i18n="stats_ga">GA</span></div>
+        <div class="stats-list" id="statsDefence"></div>
+      </article>
+      <article class="stats-card stats-card-full stats-golden">
+        <div class="stats-card-head"><h3 data-i18n="stats_scorers_h">Golden Boot Tracker</h3><span class="stats-count" id="goldenBootCount">0</span></div>
+        <div class="stats-help" data-i18n="stats_scorers_help">Valid goals only. Own goals are excluded. The first 10 stay visible first, then scroll for the rest.</div>
+        <div class="stats-table-head"><span>#</span><span data-i18n="stats_player">Player</span><span class="hide-sm" data-i18n="stats_team">Team</span><span data-i18n="stats_goals_short">Goals</span></div>
+        <div class="stats-list stats-scroll" id="statsScorers"></div>
+      </article>
+      <article class="stats-card stats-card-full">
+        <div class="stats-card-head"><h3 data-i18n="stats_cards_h">Cards & Discipline</h3><span data-i18n="stats_cards_short">YC / RC</span></div>
+        <div class="discipline-wrap">
+          <div class="discipline-block">
+            <p class="discipline-title" data-i18n="stats_player_cards">Player cards</p>
+            <div id="statsPlayerCards"></div>
+          </div>
+          <div class="discipline-block">
+            <p class="discipline-title" data-i18n="stats_team_cards">Team discipline</p>
+            <div id="statsTeamCards"></div>
+          </div>
+        </div>
+      </article>
+      <article class="stats-card stats-card-full stats-highlights-card">
+        <div class="stats-card-head">
+          <h3 data-i18n="stats_highlights_h">Match highlights</h3>
+          <div class="stats-head-actions"><span data-i18n="stats_after_3h">Kickoff + 3h</span><button class="btn stats-mini-btn" type="button" data-fetch-highlight="all" data-i18n="stats_fetch_all">Fetch missing highlights</button><button class="btn stats-mini-btn" type="button" data-import-highlights data-i18n="stats_import_highlights">Import JSON</button><input id="highlightImport" type="file" accept="application/json,.json" hidden></div>
+        </div>
+        <div class="stats-help" data-i18n="stats_highlights_help">Only matches old enough to reasonably have highlights appear here. Missing rows can be checked one-by-one or in bulk.</div>
+        <div id="highlightFetchNote" class="stats-highlight-note" aria-live="polite"></div>
+        <div class="stats-list stats-highlights-list" id="statsHighlights"></div>
+      </article>
+      <article class="stats-card stats-card-note stats-source-card">
+        <div class="stats-card-head"><h3 data-i18n="stats_live_h">Online data source later</h3><span data-i18n="stats_optional">Optional</span></div>
+        <p data-i18n="stats_live_p">Goalscorers, cards and substitutions need a match-events feed. Highlights can be powered first by a simple highlights.json file next to the tracker, then by a backend/API later.</p>
+        <div class="stats-json-hint" data-i18n="stats_json_hint">highlights.json example: { "G0": { "url": "https://...", "title": "Mexico v South Africa highlights", "source": "FIFA" } }</div>
+      </article>
+    </section>
+  </div>
+  <footer id="footer"></footer>
+</div>
+<div id="wscrim" class="wscrim" hidden></div>
+<div id="wsheet" class="wsheet" role="dialog" aria-modal="true" aria-labelledby="wsTitle" hidden>
+  <div class="wgrab" id="wsGrab"></div>
+  <div class="whead">
+    <div>
+      <div class="weyebrow" id="wsEyebrow"></div>
+      <div class="wtitle" id="wsTitle"></div>
+      <div class="wmeta" id="wsMeta"></div>
+    </div>
+    <button class="wclose" id="wsClose" aria-label="Close">&times;</button>
+  </div>
+  <div class="wregion" id="wsRegion"></div>
+  <div class="wnote" id="wsNote"></div>
+  <div class="wlist" id="wsList"></div>
+</div>
+<script>
+const ANNEXC={"ABCDEFGH":{"A":"H","B":"G","D":"B","E":"C","G":"A","I":"F","K":"D","L":"E"},"ABCDEFGI":{"A":"C","B":"G","D":"B","E":"D","G":"A","I":"F","K":"E","L":"I"},"ABCDEFGJ":{"A":"C","B":"G","D":"B","E":"D","G":"A","I":"F","K":"E","L":"J"},"ABCDEFGK":{"A":"C","B":"G","D":"B","E":"D","G":"A","I":"F","K":"E","L":"K"},"ABCDEFGL":{"A":"C","B":"G","D":"B","E":"D","G":"A","I":"F","K":"L","L":"E"},"ABCDEFHI":{"A":"H","B":"E","D":"B","E":"C","G":"A","I":"F","K":"D","L":"I"},"ABCDEFHJ":{"A":"H","B":"J","D":"B","E":"C","G":"A","I":"F","K":"D","L":"E"},"ABCDEFHK":{"A":"H","B":"E","D":"B","E":"C","G":"A","I":"F","K":"D","L":"K"},"ABCDEFHL":{"A":"H","B":"F","D":"B","E":"C","G":"A","I":"D","K":"L","L":"E"},"ABCDEFIJ":{"A":"C","B":"J","D":"B","E":"D","G":"A","I":"F","K":"E","L":"I"},"ABCDEFIK":{"A":"C","B":"E","D":"B","E":"D","G":"A","I":"F","K":"I","L":"K"},"ABCDEFIL":{"A":"C","B":"E","D":"B","E":"D","G":"A","I":"F","K":"L","L":"I"},"ABCDEFJK":{"A":"C","B":"J","D":"B","E":"D","G":"A","I":"F","K":"E","L":"K"},"ABCDEFJL":{"A":"C","B":"J","D":"B","E":"D","G":"A","I":"F","K":"L","L":"E"},"ABCDEFKL":{"A":"C","B":"E","D":"B","E":"D","G":"A","I":"F","K":"L","L":"K"},"ABCDEGHI":{"A":"H","B":"G","D":"B","E":"C","G":"A","I":"D","K":"E","L":"I"},"ABCDEGHJ":{"A":"H","B":"G","D":"B","E":"C","G":"A","I":"D","K":"E","L":"J"},"ABCDEGHK":{"A":"H","B":"G","D":"B","E":"C","G":"A","I":"D","K":"E","L":"K"},"ABCDEGHL":{"A":"H","B":"G","D":"B","E":"C","G":"A","I":"D","K":"L","L":"E"},"ABCDEGIJ":{"A":"E","B":"G","D":"B","E":"C","G":"A","I":"D","K":"I","L":"J"},"ABCDEGIK":{"A":"E","B":"G","D":"B","E":"C","G":"A","I":"D","K":"I","L":"K"},"ABCDEGIL":{"A":"E","B":"G","D":"B","E":"C","G":"A","I":"D","K":"L","L":"I"},"ABCDEGJK":{"A":"E","B":"G","D":"B","E":"C","G":"A","I":"D","K":"J","L":"K"},"ABCDEGJL":{"A":"E","B":"G","D":"B","E":"C","G":"A","I":"D","K":"L","L":"J"},"ABCDEGKL":{"A":"E","B":"G","D":"B","E":"C","G":"A","I":"D","K":"L","L":"K"},"ABCDEHIJ":{"A":"H","B":"J","D":"B","E":"C","G":"A","I":"D","K":"E","L":"I"},"ABCDEHIK":{"A":"H","B":"E","D":"B","E":"C","G":"A","I":"D","K":"I","L":"K"},"ABCDEHIL":{"A":"H","B":"E","D":"B","E":"C","G":"A","I":"D","K":"L","L":"I"},"ABCDEHJK":{"A":"H","B":"J","D":"B","E":"C","G":"A","I":"D","K":"E","L":"K"},"ABCDEHJL":{"A":"H","B":"J","D":"B","E":"C","G":"A","I":"D","K":"L","L":"E"},"ABCDEHKL":{"A":"H","B":"E","D":"B","E":"C","G":"A","I":"D","K":"L","L":"K"},"ABCDEIJK":{"A":"E","B":"J","D":"B","E":"C","G":"A","I":"D","K":"I","L":"K"},"ABCDEIJL":{"A":"E","B":"J","D":"B","E":"C","G":"A","I":"D","K":"L","L":"I"},"ABCDEIKL":{"A":"E","B":"I","D":"B","E":"C","G":"A","I":"D","K":"L","L":"K"},"ABCDEJKL":{"A":"E","B":"J","D":"B","E":"C","G":"A","I":"D","K":"L","L":"K"},"ABCDFGHI":{"A":"H","B":"G","D":"B","E":"C","G":"A","I":"F","K":"D","L":"I"},"ABCDFGHJ":{"A":"H","B":"G","D":"B","E":"C","G":"A","I":"F","K":"D","L":"J"},"ABCDFGHK":{"A":"H","B":"G","D":"B","E":"C","G":"A","I":"F","K":"D","L":"K"},"ABCDFGHL":{"A":"C","B":"G","D":"B","E":"D","G":"A","I":"F","K":"L","L":"H"},"ABCDFGIJ":{"A":"C","B":"G","D":"B","E":"D","G":"A","I":"F","K":"I","L":"J"},"ABCDFGIK":{"A":"C","B":"G","D":"B","E":"D","G":"A","I":"F","K":"I","L":"K"},"ABCDFGIL":{"A":"C","B":"G","D":"B","E":"D","G":"A","I":"F","K":"L","L":"I"},"ABCDFGJK":{"A":"C","B":"G","D":"B","E":"D","G":"A","I":"F","K":"J","L":"K"},"ABCDFGJL":{"A":"C","B":"G","D":"B","E":"D","G":"A","I":"F","K":"L","L":"J"},"ABCDFGKL":{"A":"C","B":"G","D":"B","E":"D","G":"A","I":"F","K":"L","L":"K"},"ABCDFHIJ":{"A":"H","B":"J","D":"B","E":"C","G":"A","I":"F","K":"D","L":"I"},"ABCDFHIK":{"A":"H","B":"F","D":"B","E":"C","G":"A","I":"D","K":"I","L":"K"},"ABCDFHIL":{"A":"H","B":"F","D":"B","E":"C","G":"A","I":"D","K":"L","L":"I"},"ABCDFHJK":{"A":"H","B":"J","D":"B","E":"C","G":"A","I":"F","K":"D","L":"K"},"ABCDFHJL":{"A":"C","B":"J","D":"B","E":"D","G":"A","I":"F","K":"L","L":"H"},"ABCDFHKL":{"A":"H","B":"F","D":"B","E":"C","G":"A","I":"D","K":"L","L":"K"},"ABCDFIJK":{"A":"C","B":"J","D":"B","E":"D","G":"A","I":"F","K":"I","L":"K"},"ABCDFIJL":{"A":"C","B":"J","D":"B","E":"D","G":"A","I":"F","K":"L","L":"I"},"ABCDFIKL":{"A":"C","B":"I","D":"B","E":"D","G":"A","I":"F","K":"L","L":"K"},"ABCDFJKL":{"A":"C","B":"J","D":"B","E":"D","G":"A","I":"F","K":"L","L":"K"},"ABCDGHIJ":{"A":"H","B":"G","D":"B","E":"C","G":"A","I":"D","K":"I","L":"J"},"ABCDGHIK":{"A":"H","B":"G","D":"B","E":"C","G":"A","I":"D","K":"I","L":"K"},"ABCDGHIL":{"A":"H","B":"G","D":"B","E":"C","G":"A","I":"D","K":"L","L":"I"},"ABCDGHJK":{"A":"H","B":"G","D":"B","E":"C","G":"A","I":"D","K":"J","L":"K"},"ABCDGHJL":{"A":"H","B":"G","D":"B","E":"C","G":"A","I":"D","K":"L","L":"J"},"ABCDGHKL":{"A":"H","B":"G","D":"B","E":"C","G":"A","I":"D","K":"L","L":"K"},"ABCDGIJK":{"A":"C","B":"J","D":"B","E":"D","G":"A","I":"G","K":"I","L":"K"},"ABCDGIJL":{"A":"C","B":"J","D":"B","E":"D","G":"A","I":"G","K":"L","L":"I"},"ABCDGIKL":{"A":"I","B":"G","D":"B","E":"C","G":"A","I":"D","K":"L","L":"K"},"ABCDGJKL":{"A":"C","B":"J","D":"B","E":"D","G":"A","I":"G","K":"L","L":"K"},"ABCDHIJK":{"A":"H","B":"J","D":"B","E":"C","G":"A","I":"D","K":"I","L":"K"},"ABCDHIJL":{"A":"H","B":"J","D":"B","E":"C","G":"A","I":"D","K":"L","L":"I"},"ABCDHIKL":{"A":"H","B":"I","D":"B","E":"C","G":"A","I":"D","K":"L","L":"K"},"ABCDHJKL":{"A":"H","B":"J","D":"B","E":"C","G":"A","I":"D","K":"L","L":"K"},"ABCDIJKL":{"A":"I","B":"J","D":"B","E":"C","G":"A","I":"D","K":"L","L":"K"},"ABCEFGHI":{"A":"H","B":"G","D":"B","E":"C","G":"A","I":"F","K":"E","L":"I"},"ABCEFGHJ":{"A":"H","B":"G","D":"B","E":"C","G":"A","I":"F","K":"E","L":"J"},"ABCEFGHK":{"A":"H","B":"G","D":"B","E":"C","G":"A","I":"F","K":"E","L":"K"},"ABCEFGHL":{"A":"H","B":"G","D":"B","E":"C","G":"A","I":"F","K":"L","L":"E"},"ABCEFGIJ":{"A":"E","B":"G","D":"B","E":"C","G":"A","I":"F","K":"I","L":"J"},"ABCEFGIK":{"A":"E","B":"G","D":"B","E":"C","G":"A","I":"F","K":"I","L":"K"},"ABCEFGIL":{"A":"E","B":"G","D":"B","E":"C","G":"A","I":"F","K":"L","L":"I"},"ABCEFGJK":{"A":"E","B":"G","D":"B","E":"C","G":"A","I":"F","K":"J","L":"K"},"ABCEFGJL":{"A":"E","B":"G","D":"B","E":"C","G":"A","I":"F","K":"L","L":"J"},"ABCEFGKL":{"A":"E","B":"G","D":"B","E":"C","G":"A","I":"F","K":"L","L":"K"},"ABCEFHIJ":{"A":"H","B":"J","D":"B","E":"C","G":"A","I":"F","K":"E","L":"I"},"ABCEFHIK":{"A":"H","B":"E","D":"B","E":"C","G":"A","I":"F","K":"I","L":"K"},"ABCEFHIL":{"A":"H","B":"E","D":"B","E":"C","G":"A","I":"F","K":"L","L":"I"},"ABCEFHJK":{"A":"H","B":"J","D":"B","E":"C","G":"A","I":"F","K":"E","L":"K"},"ABCEFHJL":{"A":"H","B":"J","D":"B","E":"C","G":"A","I":"F","K":"L","L":"E"},"ABCEFHKL":{"A":"H","B":"E","D":"B","E":"C","G":"A","I":"F","K":"L","L":"K"},"ABCEFIJK":{"A":"E","B":"J","D":"B","E":"C","G":"A","I":"F","K":"I","L":"K"},"ABCEFIJL":{"A":"E","B":"J","D":"B","E":"C","G":"A","I":"F","K":"L","L":"I"},"ABCEFIKL":{"A":"E","B":"I","D":"B","E":"C","G":"A","I":"F","K":"L","L":"K"},"ABCEFJKL":{"A":"E","B":"J","D":"B","E":"C","G":"A","I":"F","K":"L","L":"K"},"ABCEGHIJ":{"A":"H","B":"J","D":"B","E":"C","G":"A","I":"G","K":"E","L":"I"},"ABCEGHIK":{"A":"E","B":"G","D":"B","E":"C","G":"A","I":"H","K":"I","L":"K"},"ABCEGHIL":{"A":"E","B":"G","D":"B","E":"C","G":"A","I":"H","K":"L","L":"I"},"ABCEGHJK":{"A":"H","B":"J","D":"B","E":"C","G":"A","I":"G","K":"E","L":"K"},"ABCEGHJL":{"A":"H","B":"J","D":"B","E":"C","G":"A","I":"G","K":"L","L":"E"},"ABCEGHKL":{"A":"E","B":"G","D":"B","E":"C","G":"A","I":"H","K":"L","L":"K"},"ABCEGIJK":{"A":"E","B":"J","D":"B","E":"C","G":"A","I":"G","K":"I","L":"K"},"ABCEGIJL":{"A":"E","B":"J","D":"B","E":"C","G":"A","I":"G","K":"L","L":"I"},"ABCEGIKL":{"A":"E","B":"G","D":"B","E":"A","G":"I","I":"C","K":"L","L":"K"},"ABCEGJKL":{"A":"E","B":"J","D":"B","E":"C","G":"A","I":"G","K":"L","L":"K"},"ABCEHIJK":{"A":"E","B":"J","D":"B","E":"C","G":"A","I":"H","K":"I","L":"K"},"ABCEHIJL":{"A":"E","B":"J","D":"B","E":"C","G":"A","I":"H","K":"L","L":"I"},"ABCEHIKL":{"A":"E","B":"I","D":"B","E":"C","G":"A","I":"H","K":"L","L":"K"},"ABCEHJKL":{"A":"E","B":"J","D":"B","E":"C","G":"A","I":"H","K":"L","L":"K"},"ABCEIJKL":{"A":"E","B":"J","D":"B","E":"A","G":"I","I":"C","K":"L","L":"K"},"ABCFGHIJ":{"A":"H","B":"G","D":"B","E":"C","G":"A","I":"F","K":"I","L":"J"},"ABCFGHIK":{"A":"H","B":"G","D":"B","E":"C","G":"A","I":"F","K":"I","L":"K"},"ABCFGHIL":{"A":"H","B":"G","D":"B","E":"C","G":"A","I":"F","K":"L","L":"I"},"ABCFGHJK":{"A":"H","B":"G","D":"B","E":"C","G":"A","I":"F","K":"J","L":"K"},"ABCFGHJL":{"A":"H","B":"G","D":"B","E":"C","G":"A","I":"F","K":"L","L":"J"},"ABCFGHKL":{"A":"H","B":"G","D":"B","E":"C","G":"A","I":"F","K":"L","L":"K"},"ABCFGIJK":{"A":"C","B":"J","D":"B","E":"F","G":"A","I":"G","K":"I","L":"K"},"ABCFGIJL":{"A":"C","B":"J","D":"B","E":"F","G":"A","I":"G","K":"L","L":"I"},"ABCFGIKL":{"A":"I","B":"G","D":"B","E":"C","G":"A","I":"F","K":"L","L":"K"},"ABCFGJKL":{"A":"C","B":"J","D":"B","E":"F","G":"A","I":"G","K":"L","L":"K"},"ABCFHIJK":{"A":"H","B":"J","D":"B","E":"C","G":"A","I":"F","K":"I","L":"K"},"ABCFHIJL":{"A":"H","B":"J","D":"B","E":"C","G":"A","I":"F","K":"L","L":"I"},"ABCFHIKL":{"A":"H","B":"I","D":"B","E":"C","G":"A","I":"F","K":"L","L":"K"},"ABCFHJKL":{"A":"H","B":"J","D":"B","E":"C","G":"A","I":"F","K":"L","L":"K"},"ABCFIJKL":{"A":"I","B":"J","D":"B","E":"C","G":"A","I":"F","K":"L","L":"K"},"ABCGHIJK":{"A":"H","B":"J","D":"B","E":"C","G":"A","I":"G","K":"I","L":"K"},"ABCGHIJL":{"A":"H","B":"J","D":"B","E":"C","G":"A","I":"G","K":"L","L":"I"},"ABCGHIKL":{"A":"I","B":"G","D":"B","E":"C","G":"A","I":"H","K":"L","L":"K"},"ABCGHJKL":{"A":"H","B":"J","D":"B","E":"C","G":"A","I":"G","K":"L","L":"K"},"ABCGIJKL":{"A":"I","B":"J","D":"B","E":"C","G":"A","I":"G","K":"L","L":"K"},"ABCHIJKL":{"A":"I","B":"J","D":"B","E":"C","G":"A","I":"H","K":"L","L":"K"},"ABDEFGHI":{"A":"H","B":"G","D":"B","E":"D","G":"A","I":"F","K":"E","L":"I"},"ABDEFGHJ":{"A":"H","B":"G","D":"B","E":"D","G":"A","I":"F","K":"E","L":"J"},"ABDEFGHK":{"A":"H","B":"G","D":"B","E":"D","G":"A","I":"F","K":"E","L":"K"},"ABDEFGHL":{"A":"H","B":"G","D":"B","E":"D","G":"A","I":"F","K":"L","L":"E"},"ABDEFGIJ":{"A":"E","B":"G","D":"B","E":"D","G":"A","I":"F","K":"I","L":"J"},"ABDEFGIK":{"A":"E","B":"G","D":"B","E":"D","G":"A","I":"F","K":"I","L":"K"},"ABDEFGIL":{"A":"E","B":"G","D":"B","E":"D","G":"A","I":"F","K":"L","L":"I"},"ABDEFGJK":{"A":"E","B":"G","D":"B","E":"D","G":"A","I":"F","K":"J","L":"K"},"ABDEFGJL":{"A":"E","B":"G","D":"B","E":"D","G":"A","I":"F","K":"L","L":"J"},"ABDEFGKL":{"A":"E","B":"G","D":"B","E":"D","G":"A","I":"F","K":"L","L":"K"},"ABDEFHIJ":{"A":"H","B":"J","D":"B","E":"D","G":"A","I":"F","K":"E","L":"I"},"ABDEFHIK":{"A":"H","B":"E","D":"B","E":"D","G":"A","I":"F","K":"I","L":"K"},"ABDEFHIL":{"A":"H","B":"E","D":"B","E":"D","G":"A","I":"F","K":"L","L":"I"},"ABDEFHJK":{"A":"H","B":"J","D":"B","E":"D","G":"A","I":"F","K":"E","L":"K"},"ABDEFHJL":{"A":"H","B":"J","D":"B","E":"D","G":"A","I":"F","K":"L","L":"E"},"ABDEFHKL":{"A":"H","B":"E","D":"B","E":"D","G":"A","I":"F","K":"L","L":"K"},"ABDEFIJK":{"A":"E","B":"J","D":"B","E":"D","G":"A","I":"F","K":"I","L":"K"},"ABDEFIJL":{"A":"E","B":"J","D":"B","E":"D","G":"A","I":"F","K":"L","L":"I"},"ABDEFIKL":{"A":"E","B":"I","D":"B","E":"D","G":"A","I":"F","K":"L","L":"K"},"ABDEFJKL":{"A":"E","B":"J","D":"B","E":"D","G":"A","I":"F","K":"L","L":"K"},"ABDEGHIJ":{"A":"H","B":"J","D":"B","E":"D","G":"A","I":"G","K":"E","L":"I"},"ABDEGHIK":{"A":"E","B":"G","D":"B","E":"D","G":"A","I":"H","K":"I","L":"K"},"ABDEGHIL":{"A":"E","B":"G","D":"B","E":"D","G":"A","I":"H","K":"L","L":"I"},"ABDEGHJK":{"A":"H","B":"J","D":"B","E":"D","G":"A","I":"G","K":"E","L":"K"},"ABDEGHJL":{"A":"H","B":"J","D":"B","E":"D","G":"A","I":"G","K":"L","L":"E"},"ABDEGHKL":{"A":"E","B":"G","D":"B","E":"D","G":"A","I":"H","K":"L","L":"K"},"ABDEGIJK":{"A":"E","B":"J","D":"B","E":"D","G":"A","I":"G","K":"I","L":"K"},"ABDEGIJL":{"A":"E","B":"J","D":"B","E":"D","G":"A","I":"G","K":"L","L":"I"},"ABDEGIKL":{"A":"E","B":"G","D":"B","E":"A","G":"I","I":"D","K":"L","L":"K"},"ABDEGJKL":{"A":"E","B":"J","D":"B","E":"D","G":"A","I":"G","K":"L","L":"K"},"ABDEHIJK":{"A":"E","B":"J","D":"B","E":"D","G":"A","I":"H","K":"I","L":"K"},"ABDEHIJL":{"A":"E","B":"J","D":"B","E":"D","G":"A","I":"H","K":"L","L":"I"},"ABDEHIKL":{"A":"E","B":"I","D":"B","E":"D","G":"A","I":"H","K":"L","L":"K"},"ABDEHJKL":{"A":"E","B":"J","D":"B","E":"D","G":"A","I":"H","K":"L","L":"K"},"ABDEIJKL":{"A":"E","B":"J","D":"B","E":"A","G":"I","I":"D","K":"L","L":"K"},"ABDFGHIJ":{"A":"H","B":"G","D":"B","E":"D","G":"A","I":"F","K":"I","L":"J"},"ABDFGHIK":{"A":"H","B":"G","D":"B","E":"D","G":"A","I":"F","K":"I","L":"K"},"ABDFGHIL":{"A":"H","B":"G","D":"B","E":"D","G":"A","I":"F","K":"L","L":"I"},"ABDFGHJK":{"A":"H","B":"G","D":"B","E":"D","G":"A","I":"F","K":"J","L":"K"},"ABDFGHJL":{"A":"H","B":"G","D":"B","E":"D","G":"A","I":"F","K":"L","L":"J"},"ABDFGHKL":{"A":"H","B":"G","D":"B","E":"D","G":"A","I":"F","K":"L","L":"K"},"ABDFGIJK":{"A":"F","B":"J","D":"B","E":"D","G":"A","I":"G","K":"I","L":"K"},"ABDFGIJL":{"A":"F","B":"J","D":"B","E":"D","G":"A","I":"G","K":"L","L":"I"},"ABDFGIKL":{"A":"I","B":"G","D":"B","E":"D","G":"A","I":"F","K":"L","L":"K"},"ABDFGJKL":{"A":"F","B":"J","D":"B","E":"D","G":"A","I":"G","K":"L","L":"K"},"ABDFHIJK":{"A":"H","B":"J","D":"B","E":"D","G":"A","I":"F","K":"I","L":"K"},"ABDFHIJL":{"A":"H","B":"J","D":"B","E":"D","G":"A","I":"F","K":"L","L":"I"},"ABDFHIKL":{"A":"H","B":"I","D":"B","E":"D","G":"A","I":"F","K":"L","L":"K"},"ABDFHJKL":{"A":"H","B":"J","D":"B","E":"D","G":"A","I":"F","K":"L","L":"K"},"ABDFIJKL":{"A":"I","B":"J","D":"B","E":"D","G":"A","I":"F","K":"L","L":"K"},"ABDGHIJK":{"A":"H","B":"J","D":"B","E":"D","G":"A","I":"G","K":"I","L":"K"},"ABDGHIJL":{"A":"H","B":"J","D":"B","E":"D","G":"A","I":"G","K":"L","L":"I"},"ABDGHIKL":{"A":"I","B":"G","D":"B","E":"D","G":"A","I":"H","K":"L","L":"K"},"ABDGHJKL":{"A":"H","B":"J","D":"B","E":"D","G":"A","I":"G","K":"L","L":"K"},"ABDGIJKL":{"A":"I","B":"J","D":"B","E":"D","G":"A","I":"G","K":"L","L":"K"},"ABDHIJKL":{"A":"I","B":"J","D":"B","E":"D","G":"A","I":"H","K":"L","L":"K"},"ABEFGHIJ":{"A":"H","B":"J","D":"B","E":"F","G":"A","I":"G","K":"E","L":"I"},"ABEFGHIK":{"A":"E","B":"G","D":"B","E":"F","G":"A","I":"H","K":"I","L":"K"},"ABEFGHIL":{"A":"E","B":"G","D":"B","E":"F","G":"A","I":"H","K":"L","L":"I"},"ABEFGHJK":{"A":"H","B":"J","D":"B","E":"F","G":"A","I":"G","K":"E","L":"K"},"ABEFGHJL":{"A":"H","B":"J","D":"B","E":"F","G":"A","I":"G","K":"L","L":"E"},"ABEFGHKL":{"A":"E","B":"G","D":"B","E":"F","G":"A","I":"H","K":"L","L":"K"},"ABEFGIJK":{"A":"E","B":"J","D":"B","E":"F","G":"A","I":"G","K":"I","L":"K"},"ABEFGIJL":{"A":"E","B":"J","D":"B","E":"F","G":"A","I":"G","K":"L","L":"I"},"ABEFGIKL":{"A":"E","B":"G","D":"B","E":"A","G":"I","I":"F","K":"L","L":"K"},"ABEFGJKL":{"A":"E","B":"J","D":"B","E":"F","G":"A","I":"G","K":"L","L":"K"},"ABEFHIJK":{"A":"E","B":"J","D":"B","E":"F","G":"A","I":"H","K":"I","L":"K"},"ABEFHIJL":{"A":"E","B":"J","D":"B","E":"F","G":"A","I":"H","K":"L","L":"I"},"ABEFHIKL":{"A":"E","B":"I","D":"B","E":"F","G":"A","I":"H","K":"L","L":"K"},"ABEFHJKL":{"A":"E","B":"J","D":"B","E":"F","G":"A","I":"H","K":"L","L":"K"},"ABEFIJKL":{"A":"E","B":"J","D":"B","E":"A","G":"I","I":"F","K":"L","L":"K"},"ABEGHIJK":{"A":"E","B":"J","D":"B","E":"A","G":"H","I":"G","K":"I","L":"K"},"ABEGHIJL":{"A":"E","B":"J","D":"B","E":"A","G":"H","I":"G","K":"L","L":"I"},"ABEGHIKL":{"A":"E","B":"G","D":"B","E":"A","G":"I","I":"H","K":"L","L":"K"},"ABEGHJKL":{"A":"E","B":"J","D":"B","E":"A","G":"H","I":"G","K":"L","L":"K"},"ABEGIJKL":{"A":"E","B":"J","D":"B","E":"A","G":"I","I":"G","K":"L","L":"K"},"ABEHIJKL":{"A":"E","B":"J","D":"B","E":"A","G":"I","I":"H","K":"L","L":"K"},"ABFGHIJK":{"A":"H","B":"J","D":"B","E":"F","G":"A","I":"G","K":"I","L":"K"},"ABFGHIJL":{"A":"H","B":"J","D":"B","E":"F","G":"A","I":"G","K":"L","L":"I"},"ABFGHIKL":{"A":"H","B":"G","D":"B","E":"A","G":"I","I":"F","K":"L","L":"K"},"ABFGHJKL":{"A":"H","B":"J","D":"B","E":"F","G":"A","I":"G","K":"L","L":"K"},"ABFGIJKL":{"A":"I","B":"J","D":"B","E":"F","G":"A","I":"G","K":"L","L":"K"},"ABFHIJKL":{"A":"H","B":"J","D":"B","E":"A","G":"I","I":"F","K":"L","L":"K"},"ABGHIJKL":{"A":"H","B":"J","D":"B","E":"A","G":"I","I":"G","K":"L","L":"K"},"ACDEFGHI":{"A":"H","B":"G","D":"E","E":"C","G":"A","I":"F","K":"D","L":"I"},"ACDEFGHJ":{"A":"H","B":"G","D":"J","E":"C","G":"A","I":"F","K":"D","L":"E"},"ACDEFGHK":{"A":"H","B":"G","D":"E","E":"C","G":"A","I":"F","K":"D","L":"K"},"ACDEFGHL":{"A":"H","B":"G","D":"F","E":"C","G":"A","I":"D","K":"L","L":"E"},"ACDEFGIJ":{"A":"C","B":"G","D":"J","E":"D","G":"A","I":"F","K":"E","L":"I"},"ACDEFGIK":{"A":"C","B":"G","D":"E","E":"D","G":"A","I":"F","K":"I","L":"K"},"ACDEFGIL":{"A":"C","B":"G","D":"E","E":"D","G":"A","I":"F","K":"L","L":"I"},"ACDEFGJK":{"A":"C","B":"G","D":"J","E":"D","G":"A","I":"F","K":"E","L":"K"},"ACDEFGJL":{"A":"C","B":"G","D":"J","E":"D","G":"A","I":"F","K":"L","L":"E"},"ACDEFGKL":{"A":"C","B":"G","D":"E","E":"D","G":"A","I":"F","K":"L","L":"K"},"ACDEFHIJ":{"A":"H","B":"J","D":"E","E":"C","G":"A","I":"F","K":"D","L":"I"},"ACDEFHIK":{"A":"H","B":"E","D":"F","E":"C","G":"A","I":"D","K":"I","L":"K"},"ACDEFHIL":{"A":"H","B":"E","D":"F","E":"C","G":"A","I":"D","K":"L","L":"I"},"ACDEFHJK":{"A":"H","B":"J","D":"E","E":"C","G":"A","I":"F","K":"D","L":"K"},"ACDEFHJL":{"A":"H","B":"J","D":"F","E":"C","G":"A","I":"D","K":"L","L":"E"},"ACDEFHKL":{"A":"H","B":"E","D":"F","E":"C","G":"A","I":"D","K":"L","L":"K"},"ACDEFIJK":{"A":"C","B":"J","D":"E","E":"D","G":"A","I":"F","K":"I","L":"K"},"ACDEFIJL":{"A":"C","B":"J","D":"E","E":"D","G":"A","I":"F","K":"L","L":"I"},"ACDEFIKL":{"A":"C","B":"E","D":"I","E":"D","G":"A","I":"F","K":"L","L":"K"},"ACDEFJKL":{"A":"C","B":"J","D":"E","E":"D","G":"A","I":"F","K":"L","L":"K"},"ACDEGHIJ":{"A":"H","B":"G","D":"J","E":"C","G":"A","I":"D","K":"E","L":"I"},"ACDEGHIK":{"A":"H","B":"G","D":"E","E":"C","G":"A","I":"D","K":"I","L":"K"},"ACDEGHIL":{"A":"H","B":"G","D":"E","E":"C","G":"A","I":"D","K":"L","L":"I"},"ACDEGHJK":{"A":"H","B":"G","D":"J","E":"C","G":"A","I":"D","K":"E","L":"K"},"ACDEGHJL":{"A":"H","B":"G","D":"J","E":"C","G":"A","I":"D","K":"L","L":"E"},"ACDEGHKL":{"A":"H","B":"G","D":"E","E":"C","G":"A","I":"D","K":"L","L":"K"},"ACDEGIJK":{"A":"E","B":"G","D":"J","E":"C","G":"A","I":"D","K":"I","L":"K"},"ACDEGIJL":{"A":"E","B":"G","D":"J","E":"C","G":"A","I":"D","K":"L","L":"I"},"ACDEGIKL":{"A":"E","B":"G","D":"I","E":"C","G":"A","I":"D","K":"L","L":"K"},"ACDEGJKL":{"A":"E","B":"G","D":"J","E":"C","G":"A","I":"D","K":"L","L":"K"},"ACDEHIJK":{"A":"H","B":"J","D":"E","E":"C","G":"A","I":"D","K":"I","L":"K"},"ACDEHIJL":{"A":"H","B":"J","D":"E","E":"C","G":"A","I":"D","K":"L","L":"I"},"ACDEHIKL":{"A":"H","B":"E","D":"I","E":"C","G":"A","I":"D","K":"L","L":"K"},"ACDEHJKL":{"A":"H","B":"J","D":"E","E":"C","G":"A","I":"D","K":"L","L":"K"},"ACDEIJKL":{"A":"E","B":"J","D":"I","E":"C","G":"A","I":"D","K":"L","L":"K"},"ACDFGHIJ":{"A":"H","B":"G","D":"J","E":"C","G":"A","I":"F","K":"D","L":"I"},"ACDFGHIK":{"A":"H","B":"G","D":"F","E":"C","G":"A","I":"D","K":"I","L":"K"},"ACDFGHIL":{"A":"H","B":"G","D":"F","E":"C","G":"A","I":"D","K":"L","L":"I"},"ACDFGHJK":{"A":"H","B":"G","D":"J","E":"C","G":"A","I":"F","K":"D","L":"K"},"ACDFGHJL":{"A":"C","B":"G","D":"J","E":"D","G":"A","I":"F","K":"L","L":"H"},"ACDFGHKL":{"A":"H","B":"G","D":"F","E":"C","G":"A","I":"D","K":"L","L":"K"},"ACDFGIJK":{"A":"C","B":"G","D":"J","E":"D","G":"A","I":"F","K":"I","L":"K"},"ACDFGIJL":{"A":"C","B":"G","D":"J","E":"D","G":"A","I":"F","K":"L","L":"I"},"ACDFGIKL":{"A":"C","B":"G","D":"I","E":"D","G":"A","I":"F","K":"L","L":"K"},"ACDFGJKL":{"A":"C","B":"G","D":"J","E":"D","G":"A","I":"F","K":"L","L":"K"},"ACDFHIJK":{"A":"H","B":"J","D":"F","E":"C","G":"A","I":"D","K":"I","L":"K"},"ACDFHIJL":{"A":"H","B":"J","D":"F","E":"C","G":"A","I":"D","K":"L","L":"I"},"ACDFHIKL":{"A":"H","B":"F","D":"I","E":"C","G":"A","I":"D","K":"L","L":"K"},"ACDFHJKL":{"A":"H","B":"J","D":"F","E":"C","G":"A","I":"D","K":"L","L":"K"},"ACDFIJKL":{"A":"C","B":"J","D":"I","E":"D","G":"A","I":"F","K":"L","L":"K"},"ACDGHIJK":{"A":"H","B":"G","D":"J","E":"C","G":"A","I":"D","K":"I","L":"K"},"ACDGHIJL":{"A":"H","B":"G","D":"J","E":"C","G":"A","I":"D","K":"L","L":"I"},"ACDGHIKL":{"A":"H","B":"G","D":"I","E":"C","G":"A","I":"D","K":"L","L":"K"},"ACDGHJKL":{"A":"H","B":"G","D":"J","E":"C","G":"A","I":"D","K":"L","L":"K"},"ACDGIJKL":{"A":"I","B":"G","D":"J","E":"C","G":"A","I":"D","K":"L","L":"K"},"ACDHIJKL":{"A":"H","B":"J","D":"I","E":"C","G":"A","I":"D","K":"L","L":"K"},"ACEFGHIJ":{"A":"H","B":"G","D":"J","E":"C","G":"A","I":"F","K":"E","L":"I"},"ACEFGHIK":{"A":"H","B":"G","D":"E","E":"C","G":"A","I":"F","K":"I","L":"K"},"ACEFGHIL":{"A":"H","B":"G","D":"E","E":"C","G":"A","I":"F","K":"L","L":"I"},"ACEFGHJK":{"A":"H","B":"G","D":"J","E":"C","G":"A","I":"F","K":"E","L":"K"},"ACEFGHJL":{"A":"H","B":"G","D":"J","E":"C","G":"A","I":"F","K":"L","L":"E"},"ACEFGHKL":{"A":"H","B":"G","D":"E","E":"C","G":"A","I":"F","K":"L","L":"K"},"ACEFGIJK":{"A":"E","B":"G","D":"J","E":"C","G":"A","I":"F","K":"I","L":"K"},"ACEFGIJL":{"A":"E","B":"G","D":"J","E":"C","G":"A","I":"F","K":"L","L":"I"},"ACEFGIKL":{"A":"E","B":"G","D":"I","E":"C","G":"A","I":"F","K":"L","L":"K"},"ACEFGJKL":{"A":"E","B":"G","D":"J","E":"C","G":"A","I":"F","K":"L","L":"K"},"ACEFHIJK":{"A":"H","B":"J","D":"E","E":"C","G":"A","I":"F","K":"I","L":"K"},"ACEFHIJL":{"A":"H","B":"J","D":"E","E":"C","G":"A","I":"F","K":"L","L":"I"},"ACEFHIKL":{"A":"H","B":"E","D":"I","E":"C","G":"A","I":"F","K":"L","L":"K"},"ACEFHJKL":{"A":"H","B":"J","D":"E","E":"C","G":"A","I":"F","K":"L","L":"K"},"ACEFIJKL":{"A":"E","B":"J","D":"I","E":"C","G":"A","I":"F","K":"L","L":"K"},"ACEGHIJK":{"A":"E","B":"G","D":"J","E":"C","G":"A","I":"H","K":"I","L":"K"},"ACEGHIJL":{"A":"E","B":"G","D":"J","E":"C","G":"A","I":"H","K":"L","L":"I"},"ACEGHIKL":{"A":"E","B":"G","D":"I","E":"C","G":"A","I":"H","K":"L","L":"K"},"ACEGHJKL":{"A":"E","B":"G","D":"J","E":"C","G":"A","I":"H","K":"L","L":"K"},"ACEGIJKL":{"A":"E","B":"J","D":"I","E":"C","G":"A","I":"G","K":"L","L":"K"},"ACEHIJKL":{"A":"E","B":"J","D":"I","E":"C","G":"A","I":"H","K":"L","L":"K"},"ACFGHIJK":{"A":"H","B":"G","D":"J","E":"C","G":"A","I":"F","K":"I","L":"K"},"ACFGHIJL":{"A":"H","B":"G","D":"J","E":"C","G":"A","I":"F","K":"L","L":"I"},"ACFGHIKL":{"A":"H","B":"G","D":"I","E":"C","G":"A","I":"F","K":"L","L":"K"},"ACFGHJKL":{"A":"H","B":"G","D":"J","E":"C","G":"A","I":"F","K":"L","L":"K"},"ACFGIJKL":{"A":"I","B":"G","D":"J","E":"C","G":"A","I":"F","K":"L","L":"K"},"ACFHIJKL":{"A":"H","B":"J","D":"I","E":"C","G":"A","I":"F","K":"L","L":"K"},"ACGHIJKL":{"A":"H","B":"J","D":"I","E":"C","G":"A","I":"G","K":"L","L":"K"},"ADEFGHIJ":{"A":"H","B":"G","D":"J","E":"D","G":"A","I":"F","K":"E","L":"I"},"ADEFGHIK":{"A":"H","B":"G","D":"E","E":"D","G":"A","I":"F","K":"I","L":"K"},"ADEFGHIL":{"A":"H","B":"G","D":"E","E":"D","G":"A","I":"F","K":"L","L":"I"},"ADEFGHJK":{"A":"H","B":"G","D":"J","E":"D","G":"A","I":"F","K":"E","L":"K"},"ADEFGHJL":{"A":"H","B":"G","D":"J","E":"D","G":"A","I":"F","K":"L","L":"E"},"ADEFGHKL":{"A":"H","B":"G","D":"E","E":"D","G":"A","I":"F","K":"L","L":"K"},"ADEFGIJK":{"A":"E","B":"G","D":"J","E":"D","G":"A","I":"F","K":"I","L":"K"},"ADEFGIJL":{"A":"E","B":"G","D":"J","E":"D","G":"A","I":"F","K":"L","L":"I"},"ADEFGIKL":{"A":"E","B":"G","D":"I","E":"D","G":"A","I":"F","K":"L","L":"K"},"ADEFGJKL":{"A":"E","B":"G","D":"J","E":"D","G":"A","I":"F","K":"L","L":"K"},"ADEFHIJK":{"A":"H","B":"J","D":"E","E":"D","G":"A","I":"F","K":"I","L":"K"},"ADEFHIJL":{"A":"H","B":"J","D":"E","E":"D","G":"A","I":"F","K":"L","L":"I"},"ADEFHIKL":{"A":"H","B":"E","D":"I","E":"D","G":"A","I":"F","K":"L","L":"K"},"ADEFHJKL":{"A":"H","B":"J","D":"E","E":"D","G":"A","I":"F","K":"L","L":"K"},"ADEFIJKL":{"A":"E","B":"J","D":"I","E":"D","G":"A","I":"F","K":"L","L":"K"},"ADEGHIJK":{"A":"E","B":"G","D":"J","E":"D","G":"A","I":"H","K":"I","L":"K"},"ADEGHIJL":{"A":"E","B":"G","D":"J","E":"D","G":"A","I":"H","K":"L","L":"I"},"ADEGHIKL":{"A":"E","B":"G","D":"I","E":"D","G":"A","I":"H","K":"L","L":"K"},"ADEGHJKL":{"A":"E","B":"G","D":"J","E":"D","G":"A","I":"H","K":"L","L":"K"},"ADEGIJKL":{"A":"E","B":"J","D":"I","E":"D","G":"A","I":"G","K":"L","L":"K"},"ADEHIJKL":{"A":"E","B":"J","D":"I","E":"D","G":"A","I":"H","K":"L","L":"K"},"ADFGHIJK":{"A":"H","B":"G","D":"J","E":"D","G":"A","I":"F","K":"I","L":"K"},"ADFGHIJL":{"A":"H","B":"G","D":"J","E":"D","G":"A","I":"F","K":"L","L":"I"},"ADFGHIKL":{"A":"H","B":"G","D":"I","E":"D","G":"A","I":"F","K":"L","L":"K"},"ADFGHJKL":{"A":"H","B":"G","D":"J","E":"D","G":"A","I":"F","K":"L","L":"K"},"ADFGIJKL":{"A":"I","B":"G","D":"J","E":"D","G":"A","I":"F","K":"L","L":"K"},"ADFHIJKL":{"A":"H","B":"J","D":"I","E":"D","G":"A","I":"F","K":"L","L":"K"},"ADGHIJKL":{"A":"H","B":"J","D":"I","E":"D","G":"A","I":"G","K":"L","L":"K"},"AEFGHIJK":{"A":"E","B":"G","D":"J","E":"F","G":"A","I":"H","K":"I","L":"K"},"AEFGHIJL":{"A":"E","B":"G","D":"J","E":"F","G":"A","I":"H","K":"L","L":"I"},"AEFGHIKL":{"A":"E","B":"G","D":"I","E":"F","G":"A","I":"H","K":"L","L":"K"},"AEFGHJKL":{"A":"E","B":"G","D":"J","E":"F","G":"A","I":"H","K":"L","L":"K"},"AEFGIJKL":{"A":"E","B":"J","D":"I","E":"F","G":"A","I":"G","K":"L","L":"K"},"AEFHIJKL":{"A":"E","B":"J","D":"I","E":"F","G":"A","I":"H","K":"L","L":"K"},"AEGHIJKL":{"A":"E","B":"J","D":"I","E":"A","G":"H","I":"G","K":"L","L":"K"},"AFGHIJKL":{"A":"H","B":"J","D":"I","E":"F","G":"A","I":"G","K":"L","L":"K"},"BCDEFGHI":{"A":"C","B":"G","D":"B","E":"D","G":"H","I":"F","K":"E","L":"I"},"BCDEFGHJ":{"A":"H","B":"G","D":"B","E":"C","G":"J","I":"F","K":"D","L":"E"},"BCDEFGHK":{"A":"C","B":"G","D":"B","E":"D","G":"H","I":"F","K":"E","L":"K"},"BCDEFGHL":{"A":"C","B":"G","D":"B","E":"D","G":"H","I":"F","K":"L","L":"E"},"BCDEFGIJ":{"A":"C","B":"G","D":"B","E":"D","G":"J","I":"F","K":"E","L":"I"},"BCDEFGIK":{"A":"C","B":"G","D":"B","E":"D","G":"E","I":"F","K":"I","L":"K"},"BCDEFGIL":{"A":"C","B":"G","D":"B","E":"D","G":"E","I":"F","K":"L","L":"I"},"BCDEFGJK":{"A":"C","B":"G","D":"B","E":"D","G":"J","I":"F","K":"E","L":"K"},"BCDEFGJL":{"A":"C","B":"G","D":"B","E":"D","G":"J","I":"F","K":"L","L":"E"},"BCDEFGKL":{"A":"C","B":"G","D":"B","E":"D","G":"E","I":"F","K":"L","L":"K"},"BCDEFHIJ":{"A":"C","B":"J","D":"B","E":"D","G":"H","I":"F","K":"E","L":"I"},"BCDEFHIK":{"A":"C","B":"E","D":"B","E":"D","G":"H","I":"F","K":"I","L":"K"},"BCDEFHIL":{"A":"C","B":"E","D":"B","E":"D","G":"H","I":"F","K":"L","L":"I"},"BCDEFHJK":{"A":"C","B":"J","D":"B","E":"D","G":"H","I":"F","K":"E","L":"K"},"BCDEFHJL":{"A":"C","B":"J","D":"B","E":"D","G":"H","I":"F","K":"L","L":"E"},"BCDEFHKL":{"A":"C","B":"E","D":"B","E":"D","G":"H","I":"F","K":"L","L":"K"},"BCDEFIJK":{"A":"C","B":"J","D":"B","E":"D","G":"E","I":"F","K":"I","L":"K"},"BCDEFIJL":{"A":"C","B":"J","D":"B","E":"D","G":"E","I":"F","K":"L","L":"I"},"BCDEFIKL":{"A":"C","B":"E","D":"B","E":"D","G":"I","I":"F","K":"L","L":"K"},"BCDEFJKL":{"A":"C","B":"J","D":"B","E":"D","G":"E","I":"F","K":"L","L":"K"},"BCDEGHIJ":{"A":"H","B":"G","D":"B","E":"C","G":"J","I":"D","K":"E","L":"I"},"BCDEGHIK":{"A":"E","B":"G","D":"B","E":"C","G":"H","I":"D","K":"I","L":"K"},"BCDEGHIL":{"A":"E","B":"G","D":"B","E":"C","G":"H","I":"D","K":"L","L":"I"},"BCDEGHJK":{"A":"H","B":"G","D":"B","E":"C","G":"J","I":"D","K":"E","L":"K"},"BCDEGHJL":{"A":"H","B":"G","D":"B","E":"C","G":"J","I":"D","K":"L","L":"E"},"BCDEGHKL":{"A":"E","B":"G","D":"B","E":"C","G":"H","I":"D","K":"L","L":"K"},"BCDEGIJK":{"A":"E","B":"G","D":"B","E":"C","G":"J","I":"D","K":"I","L":"K"},"BCDEGIJL":{"A":"E","B":"G","D":"B","E":"C","G":"J","I":"D","K":"L","L":"I"},"BCDEGIKL":{"A":"E","B":"G","D":"B","E":"C","G":"I","I":"D","K":"L","L":"K"},"BCDEGJKL":{"A":"E","B":"G","D":"B","E":"C","G":"J","I":"D","K":"L","L":"K"},"BCDEHIJK":{"A":"E","B":"J","D":"B","E":"C","G":"H","I":"D","K":"I","L":"K"},"BCDEHIJL":{"A":"E","B":"J","D":"B","E":"C","G":"H","I":"D","K":"L","L":"I"},"BCDEHIKL":{"A":"E","B":"I","D":"B","E":"C","G":"H","I":"D","K":"L","L":"K"},"BCDEHJKL":{"A":"E","B":"J","D":"B","E":"C","G":"H","I":"D","K":"L","L":"K"},"BCDEIJKL":{"A":"E","B":"J","D":"B","E":"C","G":"I","I":"D","K":"L","L":"K"},"BCDFGHIJ":{"A":"H","B":"G","D":"B","E":"C","G":"J","I":"F","K":"D","L":"I"},"BCDFGHIK":{"A":"C","B":"G","D":"B","E":"D","G":"H","I":"F","K":"I","L":"K"},"BCDFGHIL":{"A":"C","B":"G","D":"B","E":"D","G":"H","I":"F","K":"L","L":"I"},"BCDFGHJK":{"A":"H","B":"G","D":"B","E":"C","G":"J","I":"F","K":"D","L":"K"},"BCDFGHJL":{"A":"C","B":"G","D":"B","E":"D","G":"H","I":"F","K":"L","L":"J"},"BCDFGHKL":{"A":"C","B":"G","D":"B","E":"D","G":"H","I":"F","K":"L","L":"K"},"BCDFGIJK":{"A":"C","B":"G","D":"B","E":"D","G":"J","I":"F","K":"I","L":"K"},"BCDFGIJL":{"A":"C","B":"G","D":"B","E":"D","G":"J","I":"F","K":"L","L":"I"},"BCDFGIKL":{"A":"C","B":"G","D":"B","E":"D","G":"I","I":"F","K":"L","L":"K"},"BCDFGJKL":{"A":"C","B":"G","D":"B","E":"D","G":"J","I":"F","K":"L","L":"K"},"BCDFHIJK":{"A":"C","B":"J","D":"B","E":"D","G":"H","I":"F","K":"I","L":"K"},"BCDFHIJL":{"A":"C","B":"J","D":"B","E":"D","G":"H","I":"F","K":"L","L":"I"},"BCDFHIKL":{"A":"C","B":"I","D":"B","E":"D","G":"H","I":"F","K":"L","L":"K"},"BCDFHJKL":{"A":"C","B":"J","D":"B","E":"D","G":"H","I":"F","K":"L","L":"K"},"BCDFIJKL":{"A":"C","B":"J","D":"B","E":"D","G":"I","I":"F","K":"L","L":"K"},"BCDGHIJK":{"A":"H","B":"G","D":"B","E":"C","G":"J","I":"D","K":"I","L":"K"},"BCDGHIJL":{"A":"H","B":"G","D":"B","E":"C","G":"J","I":"D","K":"L","L":"I"},"BCDGHIKL":{"A":"H","B":"G","D":"B","E":"C","G":"I","I":"D","K":"L","L":"K"},"BCDGHJKL":{"A":"H","B":"G","D":"B","E":"C","G":"J","I":"D","K":"L","L":"K"},"BCDGIJKL":{"A":"I","B":"G","D":"B","E":"C","G":"J","I":"D","K":"L","L":"K"},"BCDHIJKL":{"A":"H","B":"J","D":"B","E":"C","G":"I","I":"D","K":"L","L":"K"},"BCEFGHIJ":{"A":"H","B":"G","D":"B","E":"C","G":"J","I":"F","K":"E","L":"I"},"BCEFGHIK":{"A":"E","B":"G","D":"B","E":"C","G":"H","I":"F","K":"I","L":"K"},"BCEFGHIL":{"A":"E","B":"G","D":"B","E":"C","G":"H","I":"F","K":"L","L":"I"},"BCEFGHJK":{"A":"H","B":"G","D":"B","E":"C","G":"J","I":"F","K":"E","L":"K"},"BCEFGHJL":{"A":"H","B":"G","D":"B","E":"C","G":"J","I":"F","K":"L","L":"E"},"BCEFGHKL":{"A":"E","B":"G","D":"B","E":"C","G":"H","I":"F","K":"L","L":"K"},"BCEFGIJK":{"A":"E","B":"G","D":"B","E":"C","G":"J","I":"F","K":"I","L":"K"},"BCEFGIJL":{"A":"E","B":"G","D":"B","E":"C","G":"J","I":"F","K":"L","L":"I"},"BCEFGIKL":{"A":"E","B":"G","D":"B","E":"C","G":"I","I":"F","K":"L","L":"K"},"BCEFGJKL":{"A":"E","B":"G","D":"B","E":"C","G":"J","I":"F","K":"L","L":"K"},"BCEFHIJK":{"A":"E","B":"J","D":"B","E":"C","G":"H","I":"F","K":"I","L":"K"},"BCEFHIJL":{"A":"E","B":"J","D":"B","E":"C","G":"H","I":"F","K":"L","L":"I"},"BCEFHIKL":{"A":"E","B":"I","D":"B","E":"C","G":"H","I":"F","K":"L","L":"K"},"BCEFHJKL":{"A":"E","B":"J","D":"B","E":"C","G":"H","I":"F","K":"L","L":"K"},"BCEFIJKL":{"A":"E","B":"J","D":"B","E":"C","G":"I","I":"F","K":"L","L":"K"},"BCEGHIJK":{"A":"E","B":"J","D":"B","E":"C","G":"H","I":"G","K":"I","L":"K"},"BCEGHIJL":{"A":"E","B":"J","D":"B","E":"C","G":"H","I":"G","K":"L","L":"I"},"BCEGHIKL":{"A":"E","B":"G","D":"B","E":"C","G":"I","I":"H","K":"L","L":"K"},"BCEGHJKL":{"A":"E","B":"J","D":"B","E":"C","G":"H","I":"G","K":"L","L":"K"},"BCEGIJKL":{"A":"E","B":"J","D":"B","E":"C","G":"I","I":"G","K":"L","L":"K"},"BCEHIJKL":{"A":"E","B":"J","D":"B","E":"C","G":"I","I":"H","K":"L","L":"K"},"BCFGHIJK":{"A":"H","B":"G","D":"B","E":"C","G":"J","I":"F","K":"I","L":"K"},"BCFGHIJL":{"A":"H","B":"G","D":"B","E":"C","G":"J","I":"F","K":"L","L":"I"},"BCFGHIKL":{"A":"H","B":"G","D":"B","E":"C","G":"I","I":"F","K":"L","L":"K"},"BCFGHJKL":{"A":"H","B":"G","D":"B","E":"C","G":"J","I":"F","K":"L","L":"K"},"BCFGIJKL":{"A":"I","B":"G","D":"B","E":"C","G":"J","I":"F","K":"L","L":"K"},"BCFHIJKL":{"A":"H","B":"J","D":"B","E":"C","G":"I","I":"F","K":"L","L":"K"},"BCGHIJKL":{"A":"H","B":"J","D":"B","E":"C","G":"I","I":"G","K":"L","L":"K"},"BDEFGHIJ":{"A":"H","B":"G","D":"B","E":"D","G":"J","I":"F","K":"E","L":"I"},"BDEFGHIK":{"A":"E","B":"G","D":"B","E":"D","G":"H","I":"F","K":"I","L":"K"},"BDEFGHIL":{"A":"E","B":"G","D":"B","E":"D","G":"H","I":"F","K":"L","L":"I"},"BDEFGHJK":{"A":"H","B":"G","D":"B","E":"D","G":"J","I":"F","K":"E","L":"K"},"BDEFGHJL":{"A":"H","B":"G","D":"B","E":"D","G":"J","I":"F","K":"L","L":"E"},"BDEFGHKL":{"A":"E","B":"G","D":"B","E":"D","G":"H","I":"F","K":"L","L":"K"},"BDEFGIJK":{"A":"E","B":"G","D":"B","E":"D","G":"J","I":"F","K":"I","L":"K"},"BDEFGIJL":{"A":"E","B":"G","D":"B","E":"D","G":"J","I":"F","K":"L","L":"I"},"BDEFGIKL":{"A":"E","B":"G","D":"B","E":"D","G":"I","I":"F","K":"L","L":"K"},"BDEFGJKL":{"A":"E","B":"G","D":"B","E":"D","G":"J","I":"F","K":"L","L":"K"},"BDEFHIJK":{"A":"E","B":"J","D":"B","E":"D","G":"H","I":"F","K":"I","L":"K"},"BDEFHIJL":{"A":"E","B":"J","D":"B","E":"D","G":"H","I":"F","K":"L","L":"I"},"BDEFHIKL":{"A":"E","B":"I","D":"B","E":"D","G":"H","I":"F","K":"L","L":"K"},"BDEFHJKL":{"A":"E","B":"J","D":"B","E":"D","G":"H","I":"F","K":"L","L":"K"},"BDEFIJKL":{"A":"E","B":"J","D":"B","E":"D","G":"I","I":"F","K":"L","L":"K"},"BDEGHIJK":{"A":"E","B":"J","D":"B","E":"D","G":"H","I":"G","K":"I","L":"K"},"BDEGHIJL":{"A":"E","B":"J","D":"B","E":"D","G":"H","I":"G","K":"L","L":"I"},"BDEGHIKL":{"A":"E","B":"G","D":"B","E":"D","G":"I","I":"H","K":"L","L":"K"},"BDEGHJKL":{"A":"E","B":"J","D":"B","E":"D","G":"H","I":"G","K":"L","L":"K"},"BDEGIJKL":{"A":"E","B":"J","D":"B","E":"D","G":"I","I":"G","K":"L","L":"K"},"BDEHIJKL":{"A":"E","B":"J","D":"B","E":"D","G":"I","I":"H","K":"L","L":"K"},"BDFGHIJK":{"A":"H","B":"G","D":"B","E":"D","G":"J","I":"F","K":"I","L":"K"},"BDFGHIJL":{"A":"H","B":"G","D":"B","E":"D","G":"J","I":"F","K":"L","L":"I"},"BDFGHIKL":{"A":"H","B":"G","D":"B","E":"D","G":"I","I":"F","K":"L","L":"K"},"BDFGHJKL":{"A":"H","B":"G","D":"B","E":"D","G":"J","I":"F","K":"L","L":"K"},"BDFGIJKL":{"A":"I","B":"G","D":"B","E":"D","G":"J","I":"F","K":"L","L":"K"},"BDFHIJKL":{"A":"H","B":"J","D":"B","E":"D","G":"I","I":"F","K":"L","L":"K"},"BDGHIJKL":{"A":"H","B":"J","D":"B","E":"D","G":"I","I":"G","K":"L","L":"K"},"BEFGHIJK":{"A":"E","B":"J","D":"B","E":"F","G":"H","I":"G","K":"I","L":"K"},"BEFGHIJL":{"A":"E","B":"J","D":"B","E":"F","G":"H","I":"G","K":"L","L":"I"},"BEFGHIKL":{"A":"E","B":"G","D":"B","E":"F","G":"I","I":"H","K":"L","L":"K"},"BEFGHJKL":{"A":"E","B":"J","D":"B","E":"F","G":"H","I":"G","K":"L","L":"K"},"BEFGIJKL":{"A":"E","B":"J","D":"B","E":"F","G":"I","I":"G","K":"L","L":"K"},"BEFHIJKL":{"A":"E","B":"J","D":"B","E":"F","G":"I","I":"H","K":"L","L":"K"},"BEGHIJKL":{"A":"E","B":"J","D":"I","E":"B","G":"H","I":"G","K":"L","L":"K"},"BFGHIJKL":{"A":"H","B":"J","D":"B","E":"F","G":"I","I":"G","K":"L","L":"K"},"CDEFGHIJ":{"A":"C","B":"G","D":"J","E":"D","G":"H","I":"F","K":"E","L":"I"},"CDEFGHIK":{"A":"C","B":"G","D":"E","E":"D","G":"H","I":"F","K":"I","L":"K"},"CDEFGHIL":{"A":"C","B":"G","D":"E","E":"D","G":"H","I":"F","K":"L","L":"I"},"CDEFGHJK":{"A":"C","B":"G","D":"J","E":"D","G":"H","I":"F","K":"E","L":"K"},"CDEFGHJL":{"A":"C","B":"G","D":"J","E":"D","G":"H","I":"F","K":"L","L":"E"},"CDEFGHKL":{"A":"C","B":"G","D":"E","E":"D","G":"H","I":"F","K":"L","L":"K"},"CDEFGIJK":{"A":"C","B":"G","D":"E","E":"D","G":"J","I":"F","K":"I","L":"K"},"CDEFGIJL":{"A":"C","B":"G","D":"E","E":"D","G":"J","I":"F","K":"L","L":"I"},"CDEFGIKL":{"A":"C","B":"G","D":"E","E":"D","G":"I","I":"F","K":"L","L":"K"},"CDEFGJKL":{"A":"C","B":"G","D":"E","E":"D","G":"J","I":"F","K":"L","L":"K"},"CDEFHIJK":{"A":"C","B":"J","D":"E","E":"D","G":"H","I":"F","K":"I","L":"K"},"CDEFHIJL":{"A":"C","B":"J","D":"E","E":"D","G":"H","I":"F","K":"L","L":"I"},"CDEFHIKL":{"A":"C","B":"E","D":"I","E":"D","G":"H","I":"F","K":"L","L":"K"},"CDEFHJKL":{"A":"C","B":"J","D":"E","E":"D","G":"H","I":"F","K":"L","L":"K"},"CDEFIJKL":{"A":"C","B":"J","D":"E","E":"D","G":"I","I":"F","K":"L","L":"K"},"CDEGHIJK":{"A":"E","B":"G","D":"J","E":"C","G":"H","I":"D","K":"I","L":"K"},"CDEGHIJL":{"A":"E","B":"G","D":"J","E":"C","G":"H","I":"D","K":"L","L":"I"},"CDEGHIKL":{"A":"E","B":"G","D":"I","E":"C","G":"H","I":"D","K":"L","L":"K"},"CDEGHJKL":{"A":"E","B":"G","D":"J","E":"C","G":"H","I":"D","K":"L","L":"K"},"CDEGIJKL":{"A":"E","B":"G","D":"I","E":"C","G":"J","I":"D","K":"L","L":"K"},"CDEHIJKL":{"A":"E","B":"J","D":"I","E":"C","G":"H","I":"D","K":"L","L":"K"},"CDFGHIJK":{"A":"C","B":"G","D":"J","E":"D","G":"H","I":"F","K":"I","L":"K"},"CDFGHIJL":{"A":"C","B":"G","D":"J","E":"D","G":"H","I":"F","K":"L","L":"I"},"CDFGHIKL":{"A":"C","B":"G","D":"I","E":"D","G":"H","I":"F","K":"L","L":"K"},"CDFGHJKL":{"A":"C","B":"G","D":"J","E":"D","G":"H","I":"F","K":"L","L":"K"},"CDFGIJKL":{"A":"C","B":"G","D":"I","E":"D","G":"J","I":"F","K":"L","L":"K"},"CDFHIJKL":{"A":"C","B":"J","D":"I","E":"D","G":"H","I":"F","K":"L","L":"K"},"CDGHIJKL":{"A":"H","B":"G","D":"I","E":"C","G":"J","I":"D","K":"L","L":"K"},"CEFGHIJK":{"A":"E","B":"G","D":"J","E":"C","G":"H","I":"F","K":"I","L":"K"},"CEFGHIJL":{"A":"E","B":"G","D":"J","E":"C","G":"H","I":"F","K":"L","L":"I"},"CEFGHIKL":{"A":"E","B":"G","D":"I","E":"C","G":"H","I":"F","K":"L","L":"K"},"CEFGHJKL":{"A":"E","B":"G","D":"J","E":"C","G":"H","I":"F","K":"L","L":"K"},"CEFGIJKL":{"A":"E","B":"G","D":"I","E":"C","G":"J","I":"F","K":"L","L":"K"},"CEFHIJKL":{"A":"E","B":"J","D":"I","E":"C","G":"H","I":"F","K":"L","L":"K"},"CEGHIJKL":{"A":"E","B":"J","D":"I","E":"C","G":"H","I":"G","K":"L","L":"K"},"CFGHIJKL":{"A":"H","B":"G","D":"I","E":"C","G":"J","I":"F","K":"L","L":"K"},"DEFGHIJK":{"A":"E","B":"G","D":"J","E":"D","G":"H","I":"F","K":"I","L":"K"},"DEFGHIJL":{"A":"E","B":"G","D":"J","E":"D","G":"H","I":"F","K":"L","L":"I"},"DEFGHIKL":{"A":"E","B":"G","D":"I","E":"D","G":"H","I":"F","K":"L","L":"K"},"DEFGHJKL":{"A":"E","B":"G","D":"J","E":"D","G":"H","I":"F","K":"L","L":"K"},"DEFGIJKL":{"A":"E","B":"G","D":"I","E":"D","G":"J","I":"F","K":"L","L":"K"},"DEFHIJKL":{"A":"E","B":"J","D":"I","E":"D","G":"H","I":"F","K":"L","L":"K"},"DEGHIJKL":{"A":"E","B":"J","D":"I","E":"D","G":"H","I":"G","K":"L","L":"K"},"DFGHIJKL":{"A":"H","B":"G","D":"I","E":"D","G":"J","I":"F","K":"L","L":"K"},"EFGHIJKL":{"A":"E","B":"J","D":"I","E":"F","G":"H","I":"G","K":"L","L":"K"}};
+const FX=[{"g":"A","home":"Mexico","away":"South Africa","d":"2026-06-11","md":1,"min":1200,"t":"20:00","v":"Mexico City","id":"G0"},{"g":"A","home":"South Korea","away":"Czechia","d":"2026-06-12","md":1,"min":180,"t":"03:00","v":"Guadalajara","id":"G1"},{"g":"B","home":"Canada","away":"Bosnia & Herzegovina","d":"2026-06-12","md":1,"min":1200,"t":"20:00","v":"Toronto","id":"G2"},{"g":"D","home":"United States","away":"Paraguay","d":"2026-06-13","md":1,"min":120,"t":"02:00","v":"Los Angeles","id":"G3"},{"g":"B","home":"Qatar","away":"Switzerland","d":"2026-06-13","md":1,"min":1200,"t":"20:00","v":"San Francisco Bay","id":"G4"},{"g":"C","home":"Brazil","away":"Morocco","d":"2026-06-13","md":1,"min":1380,"t":"23:00","v":"New York/New Jersey","id":"G5"},{"g":"C","home":"Haiti","away":"Scotland","d":"2026-06-14","md":1,"min":120,"t":"02:00","v":"Boston","id":"G6"},{"g":"D","home":"Australia","away":"Turkey","d":"2026-06-14","md":1,"min":300,"t":"05:00","v":"Vancouver","id":"G7"},{"g":"E","home":"Germany","away":"Curaçao","d":"2026-06-14","md":1,"min":1080,"t":"18:00","v":"Houston","id":"G8"},{"g":"F","home":"Netherlands","away":"Japan","d":"2026-06-14","md":1,"min":1260,"t":"21:00","v":"Dallas","id":"G9"},{"g":"E","home":"Ivory Coast","away":"Ecuador","d":"2026-06-15","md":1,"min":0,"t":"00:00","v":"Philadelphia","id":"G10"},{"g":"F","home":"Sweden","away":"Tunisia","d":"2026-06-15","md":1,"min":180,"t":"03:00","v":"Monterrey","id":"G11"},{"g":"H","home":"Spain","away":"Cape Verde","d":"2026-06-15","md":1,"min":1020,"t":"17:00","v":"Atlanta","id":"G12"},{"g":"G","home":"Belgium","away":"Egypt","d":"2026-06-15","md":1,"min":1200,"t":"20:00","v":"Seattle","id":"G13"},{"g":"H","home":"Saudi Arabia","away":"Uruguay","d":"2026-06-15","md":1,"min":1380,"t":"23:00","v":"Miami","id":"G14"},{"g":"G","home":"Iran","away":"New Zealand","d":"2026-06-16","md":1,"min":120,"t":"02:00","v":"Los Angeles","id":"G15"},{"g":"I","home":"France","away":"Senegal","d":"2026-06-16","md":1,"min":1200,"t":"20:00","v":"New York/New Jersey","id":"G16"},{"g":"I","home":"Iraq","away":"Norway","d":"2026-06-16","md":1,"min":1380,"t":"23:00","v":"Boston","id":"G17"},{"g":"J","home":"Argentina","away":"Algeria","d":"2026-06-17","md":1,"min":120,"t":"02:00","v":"Kansas City","id":"G18"},{"g":"J","home":"Austria","away":"Jordan","d":"2026-06-17","md":1,"min":300,"t":"05:00","v":"San Francisco Bay","id":"G19"},{"g":"K","home":"Portugal","away":"DR Congo","d":"2026-06-17","md":1,"min":1080,"t":"18:00","v":"Houston","id":"G20"},{"g":"L","home":"England","away":"Croatia","d":"2026-06-17","md":1,"min":1260,"t":"21:00","v":"Dallas","id":"G21"},{"g":"L","home":"Ghana","away":"Panama","d":"2026-06-18","md":1,"min":0,"t":"00:00","v":"Toronto","id":"G22"},{"g":"K","home":"Uzbekistan","away":"Colombia","d":"2026-06-18","md":1,"min":180,"t":"03:00","v":"Mexico City","id":"G23"},{"g":"A","home":"Czechia","away":"South Africa","d":"2026-06-18","md":2,"min":1020,"t":"17:00","v":"Atlanta","id":"G24"},{"g":"B","home":"Switzerland","away":"Bosnia & Herzegovina","d":"2026-06-18","md":2,"min":1200,"t":"20:00","v":"Los Angeles","id":"G25"},{"g":"B","home":"Canada","away":"Qatar","d":"2026-06-18","md":2,"min":1380,"t":"23:00","v":"Vancouver","id":"G26"},{"g":"A","home":"Mexico","away":"South Korea","d":"2026-06-19","md":2,"min":120,"t":"02:00","v":"Guadalajara","id":"G27"},{"g":"D","home":"United States","away":"Australia","d":"2026-06-19","md":2,"min":1200,"t":"20:00","v":"Seattle","id":"G28"},{"g":"C","home":"Scotland","away":"Morocco","d":"2026-06-19","md":2,"min":1380,"t":"23:00","v":"Boston","id":"G29"},{"g":"C","home":"Brazil","away":"Haiti","d":"2026-06-20","md":2,"min":90,"t":"01:30","v":"Philadelphia","id":"G30"},{"g":"D","home":"Turkey","away":"Paraguay","d":"2026-06-20","md":2,"min":240,"t":"04:00","v":"San Francisco Bay","id":"G31"},{"g":"F","home":"Netherlands","away":"Sweden","d":"2026-06-20","md":2,"min":1080,"t":"18:00","v":"Houston","id":"G32"},{"g":"E","home":"Germany","away":"Ivory Coast","d":"2026-06-20","md":2,"min":1260,"t":"21:00","v":"Toronto","id":"G33"},{"g":"E","home":"Ecuador","away":"Curaçao","d":"2026-06-21","md":2,"min":60,"t":"01:00","v":"Kansas City","id":"G34"},{"g":"F","home":"Tunisia","away":"Japan","d":"2026-06-21","md":2,"min":300,"t":"05:00","v":"Monterrey","id":"G35"},{"g":"H","home":"Spain","away":"Saudi Arabia","d":"2026-06-21","md":2,"min":1020,"t":"17:00","v":"Atlanta","id":"G36"},{"g":"G","home":"Belgium","away":"Iran","d":"2026-06-21","md":2,"min":1200,"t":"20:00","v":"Los Angeles","id":"G37"},{"g":"H","home":"Uruguay","away":"Cape Verde","d":"2026-06-21","md":2,"min":1380,"t":"23:00","v":"Miami","id":"G38"},{"g":"G","home":"New Zealand","away":"Egypt","d":"2026-06-22","md":2,"min":120,"t":"02:00","v":"Vancouver","id":"G39"},{"g":"J","home":"Argentina","away":"Austria","d":"2026-06-22","md":2,"min":1080,"t":"18:00","v":"Dallas","id":"G40"},{"g":"I","home":"France","away":"Iraq","d":"2026-06-22","md":2,"min":1320,"t":"22:00","v":"Philadelphia","id":"G41"},{"g":"I","home":"Norway","away":"Senegal","d":"2026-06-23","md":2,"min":60,"t":"01:00","v":"Toronto","id":"G42"},{"g":"J","home":"Jordan","away":"Algeria","d":"2026-06-23","md":2,"min":240,"t":"04:00","v":"San Francisco Bay","id":"G43"},{"g":"K","home":"Portugal","away":"Uzbekistan","d":"2026-06-23","md":2,"min":1080,"t":"18:00","v":"Houston","id":"G44"},{"g":"L","home":"England","away":"Ghana","d":"2026-06-23","md":2,"min":1260,"t":"21:00","v":"Boston","id":"G45"},{"g":"L","home":"Panama","away":"Croatia","d":"2026-06-24","md":2,"min":0,"t":"00:00","v":"Boston","id":"G46"},{"g":"K","home":"Colombia","away":"DR Congo","d":"2026-06-24","md":2,"min":180,"t":"03:00","v":"Guadalajara","id":"G47"},{"g":"B","home":"Switzerland","away":"Canada","d":"2026-06-24","md":3,"min":1200,"t":"20:00","v":"Vancouver","id":"G48"},{"g":"B","home":"Bosnia & Herzegovina","away":"Qatar","d":"2026-06-24","md":3,"min":1200,"t":"20:00","v":"Seattle","id":"G49"},{"g":"C","home":"Morocco","away":"Haiti","d":"2026-06-24","md":3,"min":1380,"t":"23:00","v":"Atlanta","id":"G50"},{"g":"C","home":"Scotland","away":"Brazil","d":"2026-06-24","md":3,"min":1380,"t":"23:00","v":"Miami","id":"G51"},{"g":"A","home":"South Africa","away":"South Korea","d":"2026-06-25","md":3,"min":120,"t":"02:00","v":"Monterrey","id":"G52"},{"g":"A","home":"Czechia","away":"Mexico","d":"2026-06-25","md":3,"min":120,"t":"02:00","v":"Mexico City","id":"G53"},{"g":"E","home":"Curaçao","away":"Ivory Coast","d":"2026-06-25","md":3,"min":1260,"t":"21:00","v":"Philadelphia","id":"G54"},{"g":"E","home":"Ecuador","away":"Germany","d":"2026-06-25","md":3,"min":1260,"t":"21:00","v":"New York/New Jersey","id":"G55"},{"g":"F","home":"Tunisia","away":"Netherlands","d":"2026-06-26","md":3,"min":0,"t":"00:00","v":"Kansas City","id":"G56"},{"g":"F","home":"Japan","away":"Sweden","d":"2026-06-26","md":3,"min":0,"t":"00:00","v":"Dallas","id":"G57"},{"g":"D","home":"Turkey","away":"United States","d":"2026-06-26","md":3,"min":180,"t":"03:00","v":"Los Angeles","id":"G58"},{"g":"D","home":"Paraguay","away":"Australia","d":"2026-06-26","md":3,"min":180,"t":"03:00","v":"San Francisco Bay","id":"G59"},{"g":"I","home":"Norway","away":"France","d":"2026-06-26","md":3,"min":1200,"t":"20:00","v":"Boston","id":"G60"},{"g":"I","home":"Senegal","away":"Iraq","d":"2026-06-26","md":3,"min":1200,"t":"20:00","v":"Toronto","id":"G61"},{"g":"H","home":"Cape Verde","away":"Saudi Arabia","d":"2026-06-27","md":3,"min":60,"t":"01:00","v":"Houston","id":"G62"},{"g":"H","home":"Uruguay","away":"Spain","d":"2026-06-27","md":3,"min":60,"t":"01:00","v":"Guadalajara","id":"G63"},{"g":"G","home":"New Zealand","away":"Belgium","d":"2026-06-27","md":3,"min":240,"t":"04:00","v":"Vancouver","id":"G64"},{"g":"G","home":"Egypt","away":"Iran","d":"2026-06-27","md":3,"min":240,"t":"04:00","v":"Seattle","id":"G65"},{"g":"L","home":"Panama","away":"England","d":"2026-06-27","md":3,"min":1320,"t":"22:00","v":"New York/New Jersey","id":"G66"},{"g":"L","home":"Croatia","away":"Ghana","d":"2026-06-27","md":3,"min":1320,"t":"22:00","v":"Philadelphia","id":"G67"},{"g":"K","home":"Colombia","away":"Portugal","d":"2026-06-28","md":3,"min":30,"t":"00:30","v":"Miami","id":"G68"},{"g":"K","home":"DR Congo","away":"Uzbekistan","d":"2026-06-28","md":3,"min":30,"t":"00:30","v":"Atlanta","id":"G69"},{"g":"J","home":"Algeria","away":"Austria","d":"2026-06-28","md":3,"min":180,"t":"03:00","v":"Kansas City","id":"G70"},{"g":"J","home":"Jordan","away":"Argentina","d":"2026-06-28","md":3,"min":180,"t":"03:00","v":"Dallas","id":"G71"}];
+const KOMETA={"73":{"d":"2026-06-28","t":"20:00","v":"Los Angeles"},"74":{"d":"2026-06-29","t":"21:30","v":"Boston"},"75":{"d":"2026-06-30","t":"02:00","v":"Monterrey"},"76":{"d":"2026-06-29","t":"18:00","v":"Houston"},"77":{"d":"2026-06-30","t":"22:00","v":"New York/New Jersey"},"78":{"d":"2026-06-30","t":"18:00","v":"Dallas"},"79":{"d":"2026-07-01","t":"02:00","v":"Mexico City"},"80":{"d":"2026-07-01","t":"17:00","v":"Atlanta"},"81":{"d":"2026-07-02","t":"01:00","v":"San Francisco Bay"},"82":{"d":"2026-07-01","t":"21:00","v":"Seattle"},"83":{"d":"2026-07-03","t":"00:00","v":"Toronto"},"84":{"d":"2026-07-02","t":"20:00","v":"Los Angeles"},"85":{"d":"2026-07-03","t":"04:00","v":"Vancouver"},"86":{"d":"2026-07-03","t":"23:00","v":"Miami"},"87":{"d":"2026-07-04","t":"02:30","v":"Kansas City"},"88":{"d":"2026-07-03","t":"19:00","v":"Dallas"},"89":{"d":"2026-07-04","t":"22:00","v":"Philadelphia"},"90":{"d":"2026-07-04","t":"18:00","v":"Houston"},"91":{"d":"2026-07-05","t":"21:00","v":"New York/New Jersey"},"92":{"d":"2026-07-06","t":"01:00","v":"Mexico City"},"93":{"d":"2026-07-06","t":"20:00","v":"Dallas"},"94":{"d":"2026-07-07","t":"01:00","v":"Seattle"},"95":{"d":"2026-07-07","t":"17:00","v":"Atlanta"},"96":{"d":"2026-07-07","t":"21:00","v":"Vancouver"},"97":{"d":"2026-07-09","t":"21:00","v":"Boston"},"98":{"d":"2026-07-10","t":"20:00","v":"Los Angeles"},"99":{"d":"2026-07-11","t":"22:00","v":"Miami"},"100":{"d":"2026-07-12","t":"02:00","v":"Kansas City"},"101":{"d":"2026-07-14","t":"20:00","v":"Dallas"},"102":{"d":"2026-07-15","t":"20:00","v":"Atlanta"},"103":{"d":"2026-07-18","t":"22:00","v":"Miami"},"104":{"d":"2026-07-19","t":"20:00","v":"New York/New Jersey"}};
+const GROUPS={A:["Mexico","South Africa","South Korea","Czechia"],B:["Canada","Bosnia & Herzegovina","Qatar","Switzerland"],C:["Brazil","Morocco","Haiti","Scotland"],D:["United States","Paraguay","Australia","Turkey"],E:["Germany","Curaçao","Ivory Coast","Ecuador"],F:["Netherlands","Japan","Sweden","Tunisia"],G:["Belgium","Egypt","Iran","New Zealand"],H:["Spain","Cape Verde","Saudi Arabia","Uruguay"],I:["France","Senegal","Iraq","Norway"],J:["Argentina","Algeria","Austria","Jordan"],K:["Portugal","DR Congo","Uzbekistan","Colombia"],L:["England","Croatia","Ghana","Panama"]};
+const FLAG={"Mexico":"🇲🇽","South Africa":"🇿🇦","South Korea":"🇰🇷","Czechia":"🇨🇿","Canada":"🇨🇦","Bosnia & Herzegovina":"🇧🇦","Qatar":"🇶🇦","Switzerland":"🇨🇭","Brazil":"🇧🇷","Morocco":"🇲🇦","Haiti":"🇭🇹","Scotland":"🏴󠁧󠁢󠁳󠁣󠁴󠁿","United States":"🇺🇸","Paraguay":"🇵🇾","Australia":"🇦🇺","Turkey":"🇹🇷","Germany":"🇩🇪","Curaçao":"🇨🇼","Ivory Coast":"🇨🇮","Ecuador":"🇪🇨","Netherlands":"🇳🇱","Japan":"🇯🇵","Sweden":"🇸🇪","Tunisia":"🇹🇳","Belgium":"🇧🇪","Egypt":"🇪🇬","Iran":"🇮🇷","New Zealand":"🇳🇿","Spain":"🇪🇸","Cape Verde":"🇨🇻","Saudi Arabia":"🇸🇦","Uruguay":"🇺🇾","France":"🇫🇷","Senegal":"🇸🇳","Iraq":"🇮🇶","Norway":"🇳🇴","Argentina":"🇦🇷","Algeria":"🇩🇿","Austria":"🇦🇹","Jordan":"🇯🇴","Portugal":"🇵🇹","DR Congo":"🇨🇩","Uzbekistan":"🇺🇿","Colombia":"🇨🇴","England":"🏴󠁧󠁢󠁥󠁮󠁧󠁿","Croatia":"🇭🇷","Ghana":"🇬🇭","Panama":"🇵🇦"};
+const RANK={"Spain":1,"Argentina":2,"France":3,"England":4,"Portugal":5,"Netherlands":6,"Brazil":7,"Belgium":8,"Germany":9,"Croatia":10,"Morocco":11,"Colombia":13,"United States":14,"Mexico":15,"Uruguay":16,"Switzerland":17,"Japan":18,"Senegal":19,"Iran":20,"South Korea":22,"Ecuador":23,"Austria":24,"Australia":25,"Turkey":26,"Canada":27,"Norway":29,"Panama":30,"Egypt":34,"Algeria":35,"Scotland":36,"Paraguay":39,"Ivory Coast":40,"Tunisia":41,"Sweden":42,"Uzbekistan":54,"Saudi Arabia":58,"Iraq":59,"DR Congo":60,"Qatar":61,"Bosnia & Herzegovina":62,"Jordan":66,"Cape Verde":68,"Ghana":72,"Curaçao":82,"Haiti":84,"New Zealand":85};
+const GL=["A","B","C","D","E","F","G","H","I","J","K","L"];
+const GDATES={A:"11-25 Jun",B:"12-24 Jun",C:"13-24 Jun",D:"13-26 Jun",E:"14-25 Jun",F:"14-26 Jun",G:"15-27 Jun",H:"15-27 Jun",I:"16-26 Jun",J:"17-28 Jun",K:"17-28 Jun",L:"17-27 Jun"};
+const R32=[[73,"RA","RB"],[74,"WE","T:E"],[75,"WF","RC"],[76,"WC","RF"],[77,"WI","T:I"],[78,"RE","RI"],[79,"WA","T:A"],[80,"WL","T:L"],[81,"WD","T:D"],[82,"WG","T:G"],[83,"RK","RL"],[84,"WH","RJ"],[85,"WB","T:B"],[86,"WJ","RH"],[87,"WK","T:K"],[88,"RD","RG"]];
+const KO=[{t:"Round of 16",d:"4-7 Jul",m:[[89,74,77],[90,73,75],[91,76,78],[92,79,80],[93,83,84],[94,81,82],[95,86,88],[96,85,87]]},
+{t:"Quarter-finals",d:"9-12 Jul",m:[[97,89,90],[98,93,94],[99,91,92],[100,95,96]]},
+{t:"Semi-finals",d:"14-15 Jul",m:[[101,97,98],[102,99,100]]},
+{t:"Third place",d:"18 Jul",m:[[103,101,102]],loser:true},
+{t:"Final",d:"19 Jul",m:[[104,101,102]]}];
+const BYG={};FX.forEach(m=>{(BYG[m.g]=BYG[m.g]||[]).push(m)});
+const WD={en:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],pt:["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"]};
+const MON={en:["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],pt:["Jan","Fev","Mar","Abr","Mai","Jun","Jul","Ago","Set","Out","Nov","Dez"]};
+
+/* ---- i18n ---- */
+const I18N={
+ en:{title_doc:"World Cup 2026 | Tracker",eyebrow:"FIFA World Cup · Canada · Mexico · United States",
+  title:'World Cup <span>26</span> Tracker',
+  sub:"Enter scores on the Matches tab as games kick off. Standings, the third-place race and the knockout bracket all update themselves under the official 2026 rules.",
+  host_teams:"48 teams · <b>12 groups</b>",host_matches:"104 matches",host_dates:"11 Jun to <b>19 Jul 2026</b>",
+  times_local:"All times in your local time",
+  tab_groups:"Group Stage",tab_matches:"Matches",tab_knockout:"Knockout",
+  prog_label:"Groups done",reset_btn:"Reset",
+  thirds_h:"Race for the third-place spots",
+  thirds_note:"The eight best third-placed teams advance. Ranked by points, then goal difference, then goals scored (then conduct and FIFA ranking). Updates as groups finish.",
+  thirds_empty:"No groups finished yet. Third-placed teams appear here as each group completes.",
+  expand_all:"Expand all",collapse_all:"Collapse all",matchday:"Matchday",
+  th:["Team","P","W","D","L","GF","GA","GD","Pts"],th_rank:"rank",group:"Group",
+  ko_locked:"Finish all 12 groups and the Round of 32 fills automatically from the official third-place mapping. ({n}/12 done)",
+  r_r32:"Round of 32",r_r16:"Round of 16",r_qf:"Quarter-finals",r_sf:"Semi-finals",r_3p:"Third place",r_f:"Final",
+  winner:"Winner",runnerup:"Runner-up",third:"3rd",tbd:"TBD",loser:"Loser",match:"MATCH",pens:"Pens",champ:"World Champions",
+  reset_confirm:"Clear all scores and start fresh?",
+  footer:'<b>Tiebreakers (2026 rules):</b> points, then head-to-head (points, goal difference, goals among the level teams), then overall goal difference, then overall goals scored, then FIFA ranking. A <span class="tiebadge">rank</span> tag means a tie fell through to the ranking fallback (fair-play conduct is not tracked here). <b>Knockout:</b> level after 90 minutes? Enter equal scores and tap a penalties winner. The Round of 32 fills from the official Annex C third-place mapping once all 12 groups finish.',
+  footer_times:"Times are shown in your local time ({tz}). Everything saves in this browser automatically.",
+  lang_btn:"PT"},
+ pt:{title_doc:"Copa do Mundo 2026 | Painel",eyebrow:"Copa do Mundo FIFA · Canadá · México · Estados Unidos",
+  title:'Copa do Mundo <span>26</span>',
+  sub:"Coloque os placares na aba Jogos conforme as partidas começam. A classificação, a corrida pelo terceiro lugar e o mata-mata se atualizam sozinhos seguindo as regras oficiais de 2026.",
+  host_teams:"48 seleções · <b>12 grupos</b>",host_matches:"104 jogos",host_dates:"11 jun a <b>19 jul 2026</b>",
+  times_local:"Todos os horários no seu fuso local",
+  tab_groups:"Fase de Grupos",tab_matches:"Jogos",tab_knockout:"Mata-mata",
+  prog_label:"Grupos completos",reset_btn:"Limpar",
+  thirds_h:"Corrida pelas vagas de terceiro lugar",
+  thirds_note:"As oito melhores seleções em terceiro avançam. Ordenadas por pontos, depois saldo de gols, depois gols marcados (depois conduta e ranking da FIFA). Atualiza conforme os grupos terminam.",
+  thirds_empty:"Nenhum grupo concluído ainda. As seleções em terceiro aparecem aqui conforme cada grupo termina.",
+  expand_all:"Expandir tudo",collapse_all:"Recolher tudo",matchday:"Rodada",
+  th:["Seleção","J","V","E","D","GP","GC","SG","Pts"],th_rank:"crit.",group:"Grupo",
+  ko_locked:"Conclua os 12 grupos e os 16-avos se preenchem automaticamente pelo mapeamento oficial dos terceiros colocados. ({n}/12 concluídos)",
+  r_r32:"16-avos de final",r_r16:"Oitavas de final",r_qf:"Quartas de final",r_sf:"Semifinais",r_3p:"Terceiro lugar",r_f:"Final",
+  winner:"Vencedor",runnerup:"Vice",third:"3º",tbd:"A definir",loser:"Perdedor",match:"JOGO",pens:"Pênaltis",champ:"Campeão Mundial",
+  reset_confirm:"Apagar todos os placares e começar de novo?",
+  footer:'<b>Critérios de desempate (regras de 2026):</b> pontos, depois confronto direto (pontos, saldo de gols, gols entre as seleções empatadas), depois saldo de gols geral, depois gols marcados no geral, depois ranking da FIFA. A marca <span class="tiebadge">crit.</span> indica que um empate caiu no critério de ranking (a conduta de fair-play não é considerada aqui). <b>Mata-mata:</b> empate após 90 minutos? Coloque placares iguais e toque no vencedor dos pênaltis. Os 16-avos se preenchem pelo mapeamento oficial dos terceiros (Anexo C) quando os 12 grupos terminam.',
+  footer_times:"Os horários são exibidos no seu fuso local ({tz}). Tudo é salvo automaticamente neste navegador.",
+  lang_btn:"EN"}};
+const ROUND_KEY={"Round of 32":"r_r32","Round of 16":"r_r16","Quarter-finals":"r_qf","Semi-finals":"r_sf","Third place":"r_3p","Final":"r_f"};
+const TEAM_PT={"Mexico":"México","South Africa":"África do Sul","South Korea":"Coreia do Sul","Czechia":"Tchéquia","Canada":"Canadá","Bosnia & Herzegovina":"Bósnia e Herzegovina","Qatar":"Catar","Switzerland":"Suíça","Brazil":"Brasil","Morocco":"Marrocos","Haiti":"Haiti","Scotland":"Escócia","United States":"Estados Unidos","Paraguay":"Paraguai","Australia":"Austrália","Turkey":"Turquia","Germany":"Alemanha","Curaçao":"Curaçao","Ivory Coast":"Costa do Marfim","Ecuador":"Equador","Netherlands":"Países Baixos","Japan":"Japão","Sweden":"Suécia","Tunisia":"Tunísia","Belgium":"Bélgica","Egypt":"Egito","Iran":"Irã","New Zealand":"Nova Zelândia","Spain":"Espanha","Cape Verde":"Cabo Verde","Saudi Arabia":"Arábia Saudita","Uruguay":"Uruguai","France":"França","Senegal":"Senegal","Iraq":"Iraque","Norway":"Noruega","Argentina":"Argentina","Algeria":"Argélia","Austria":"Áustria","Jordan":"Jordânia","Portugal":"Portugal","DR Congo":"RD Congo","Uzbekistan":"Uzbequistão","Colombia":"Colômbia","England":"Inglaterra","Croatia":"Croácia","Ghana":"Gana","Panama":"Panamá"};
+let lang="en";
+function T(k){return (I18N[lang]&&I18N[lang][k]!==undefined)?I18N[lang][k]:I18N.en[k];}
+function tn(n){return lang==="pt"?(TEAM_PT[n]||n):n;}
+function roundTitle(t){return T(ROUND_KEY[t]||"")||t;}
+
+/* ---- time: source data is BST (UTC+1); render in the browser's local zone ---- */
+function pad(n){return String(n).padStart(2,"0");}
+function absMs(d,min){const p=d.split("-").map(Number);return Date.UTC(p[0],p[1]-1,p[2])+(min-60)*60000;}
+function localTime(d,min){const dt=new Date(absMs(d,min));return pad(dt.getHours())+":"+pad(dt.getMinutes());}
+function localKey(d,min){const dt=new Date(absMs(d,min));return dt.getFullYear()+"-"+pad(dt.getMonth()+1)+"-"+pad(dt.getDate());}
+function localDateLabel(key){const p=key.split("-").map(Number);const dt=new Date(p[0],p[1]-1,p[2]);return WD[lang][dt.getDay()]+" "+p[2]+" "+MON[lang][p[1]-1];}
+function tzLabel(){try{const parts=new Intl.DateTimeFormat(lang==="pt"?"pt-BR":"en",{timeZoneName:"short"}).formatToParts(new Date());const z=parts.find(p=>p.type==="timeZoneName");return z?z.value:"";}catch(e){return"";}}
+
+const FX2=FX.map(m=>({...m,ms:absMs(m.d,m.min),lk:localKey(m.d,m.min)})).sort((a,b)=>a.ms-b.ms);
+let state=load();
+lang=state.lang;
+function load(){let s=null;try{s=JSON.parse(localStorage.getItem("wc26"))}catch(e){}
+  if(!(s&&s.v===2))s={v:2,scores:{},ko:{},pen:{},collapsed:{}};
+  if(!s.lang)s.lang=(navigator.language||"en").toLowerCase().startsWith("pt")?"pt":"en";
+  if(!s.region)s.region="uk";
+  if(!s.tab)s.tab="G";
+  if(!s.highlights||typeof s.highlights!=="object")s.highlights={};
+  if(!s.events||typeof s.events!=="object")s.events={};
+  if(!s.highlightMeta||typeof s.highlightMeta!=="object")s.highlightMeta={};
+  return s;}
+function save(){localStorage.setItem("wc26",JSON.stringify(state))}
+
+function fmtUTC(min){let u=(min-60+1440)%1440;return String(Math.floor(u/60)).padStart(2,"0")+":"+String(u%60).padStart(2,"0");}
+function fl(t,side){const f=FLAG[t]||"";return '<span class="flag '+(side==="r"?"fl-r":side==="l"?"fl-l":"")+'">'+f+'</span>';}
+
+function groupStats(gl){const teams=GROUPS[gl],st={};teams.forEach(t=>st[t]={t,pld:0,w:0,d:0,l:0,gf:0,ga:0,gd:0,pts:0});
+  BYG[gl].forEach(m=>{const sc=state.scores[m.id];if(!sc||sc[0]===""||sc[1]==="")return;const x=+sc[0],y=+sc[1],a=m.home,b=m.away;
+    st[a].pld++;st[b].pld++;st[a].gf+=x;st[a].ga+=y;st[b].gf+=y;st[b].ga+=x;
+    if(x>y){st[a].w++;st[a].pts+=3;st[b].l++}else if(y>x){st[b].w++;st[b].pts+=3;st[a].l++}else{st[a].d++;st[b].d++;st[a].pts++;st[b].pts++}});
+  teams.forEach(t=>st[t].gd=st[t].gf-st[t].ga);return st;}
+function groupComplete(gl){return BYG[gl].every(m=>{const s=state.scores[m.id];return s&&s[0]!==""&&s[1]!==""})}
+function h2h(gl,names){const set=new Set(names),m={};names.forEach(n=>m[n]={pts:0,gd:0,gf:0});
+  BYG[gl].forEach(fx=>{const sc=state.scores[fx.id];if(!sc||sc[0]===""||sc[1]==="")return;const a=fx.home,b=fx.away;if(!set.has(a)||!set.has(b))return;
+    const x=+sc[0],y=+sc[1];m[a].gf+=x;m[b].gf+=y;m[a].gd+=x-y;m[b].gd+=y-x;if(x>y)m[a].pts+=3;else if(y>x)m[b].pts+=3;else{m[a].pts++;m[b].pts++}});
+  return m;}
+function rankGroup(gl){const st=groupStats(gl);const byPts={};GROUPS[gl].forEach(t=>{(byPts[st[t].pts]=byPts[st[t].pts]||[]).push(t)});
+  const keys=Object.keys(byPts).map(Number).sort((a,b)=>b-a);const out=[];keys.forEach(k=>out.push(...resolveH2H(gl,byPts[k],st)));
+  return out.map(o=>({...st[o.t],tie:o.tie}));}
+function resolveH2H(gl,names,st){if(names.length===1)return[{t:names[0],tie:false}];const m=h2h(gl,names);
+  const key=n=>m[n].pts+"|"+m[n].gd+"|"+m[n].gf;const cl={};names.forEach(n=>{(cl[key(n)]=cl[key(n)]||[]).push(n)});
+  const keys=Object.keys(cl).sort((A,B)=>{const a=A.split("|").map(Number),b=B.split("|").map(Number);return b[0]-a[0]||b[1]-a[1]||b[2]-a[2]});
+  if(keys.length===1)return resolveOverall(gl,names,st);const res=[];
+  keys.forEach(k=>{const sub=cl[k];res.push(...(sub.length===1?[{t:sub[0],tie:false}]:resolveH2H(gl,sub,st)))});return res;}
+function resolveOverall(gl,names,st){const key=n=>st[n].gd+"|"+st[n].gf;const cl={};names.forEach(n=>{(cl[key(n)]=cl[key(n)]||[]).push(n)});
+  const keys=Object.keys(cl).sort((A,B)=>{const a=A.split("|").map(Number),b=B.split("|").map(Number);return b[0]-a[0]||b[1]-a[1]});
+  const res=[];keys.forEach(k=>{const sub=cl[k];if(sub.length===1)res.push({t:sub[0],tie:false});else{sub.sort((x,y)=>(RANK[x]||99)-(RANK[y]||99));sub.forEach(n=>res.push({t:n,tie:true}))}});return res;}
+function thirdsRanked(){const arr=[];GL.forEach(gl=>{if(groupComplete(gl)){const r=rankGroup(gl);arr.push({...r[2],g:gl})}});
+  arr.sort((a,b)=>b.pts-a.pts||b.gd-a.gd||b.gf-a.gf||(RANK[a.t]||99)-(RANK[b.t]||99));return arr;}
+function koWinner(no){const sc=state.ko[no];if(!sc||sc[0]===""||sc[1]==="")return null;const x=+sc[0],y=+sc[1];if(x>y)return"home";if(y>x)return"away";return state.pen[no]||null;}
+function buildBracket(){const allDone=GL.every(groupComplete);const M={};
+  if(allDone){const W={},R={},T={};GL.forEach(gl=>{const r=rankGroup(gl);W[gl]=r[0].t;R[gl]=r[1].t});
+    const tr=thirdsRanked().slice(0,8);const map=ANNEXC[tr.map(x=>x.g).sort().join("")];const tbg={};tr.forEach(x=>tbg[x.g]=x.t);
+    if(map)Object.keys(map).forEach(col=>T[col]=tbg[map[col]]);
+    R32.forEach(([no,L,Rr])=>{M[no]={home:resolveRef(L,W,R,T),away:resolveRef(Rr,W,R,T)}});
+  }else R32.forEach(([no])=>M[no]={home:null,away:null});
+  KO.forEach(rd=>rd.m.forEach(([no,a,b])=>{M[no]={home:feed(M,a,rd.loser),away:feed(M,b,rd.loser)}}));return M;}
+function resolveRef(ref,W,R,T){if(ref[0]==="W")return W[ref[1]];if(ref[0]==="R")return R[ref[1]];if(ref.startsWith("T:"))return T[ref[2]]||null;return null;}
+function feed(M,fromNo,loser){const w=koWinner(fromNo);if(!w)return null;const m=M[fromNo];if(!m)return null;return loser?(w==="home"?m.away:m.home):(w==="home"?m.home:m.away);}
+const POOL={A:"C/E/F/H/I",B:"E/F/G/I/J",D:"B/E/F/I/J",E:"A/B/C/D/F",G:"A/E/H/I/J",I:"C/D/F/G/H",K:"D/E/I/J/L",L:"E/H/I/J/K"};
+function refLabel(ref){if(ref[0]==="W")return T("winner")+" "+ref[1];if(ref[0]==="R")return T("runnerup")+" "+ref[1];if(ref.startsWith("T:"))return T("third")+" "+POOL[ref[2]];return T("tbd");}
+
+/* ---- render: standings ---- */
+function standRows(gl){const r=rankGroup(gl);let h="";
+  r.forEach((s,i)=>{h+='<tr class="q'+(i+1)+'"><td class="team"><span class="pos">'+(i+1)+'</span>'+fl(s.t,"r")+tn(s.t)+(s.tie?'<span class="tiebadge">'+T("th_rank")+'</span>':'')+'</td><td>'+s.pld+'</td><td>'+s.w+'</td><td>'+s.d+'</td><td>'+s.l+'</td><td>'+s.gf+'</td><td>'+s.ga+'</td><td class="gd">'+(s.gd>0?"+":"")+s.gd+'</td><td class="pts">'+s.pts+'</td></tr>'});
+  return h;}
+function renderStandings(){const TH=T("th");let h="";GL.forEach(gl=>{
+  h+='<div class="card"><div class="chead"><div class="g">'+T("group")+' <em>'+gl+'</em></div><div class="dates">'+GDATES[gl]+'</div></div><table class="stand"><thead><tr><th class="l">'+TH[0]+'</th><th>'+TH[1]+'</th><th>'+TH[2]+'</th><th>'+TH[3]+'</th><th>'+TH[4]+'</th><th>'+TH[5]+'</th><th>'+TH[6]+'</th><th>'+TH[7]+'</th><th>'+TH[8]+'</th></tr></thead><tbody>'+standRows(gl)+'</tbody></table></div>';});
+  document.getElementById("groups").innerHTML=h;}
+function renderThirds(){const arr=thirdsRanked();let h="";
+  if(!arr.length)h='<div style="color:var(--dim);font-size:12.5px">'+T("thirds_empty")+'</div>';
+  arr.forEach((s,i)=>{h+='<div class="trow '+(i<8?"in":"")+'"><span class="rk">'+(i+1)+'</span>'+fl(s.t)+'<span class="tnm">'+tn(s.t)+'</span><span class="grp">'+s.g+'</span><span class="pn">'+s.pts+'p '+(s.gd>0?"+":"")+s.gd+'</span></div>'});
+  document.getElementById("thirds").innerHTML=h;}
+
+/* ---- render: matches (chronological, grouped by local date) ---- */
+function dayCount(lk){const all=FX2.filter(m=>m.lk===lk);const done=all.filter(m=>{const s=state.scores[m.id];return s&&s[0]!==""&&s[1]!==""}).length;return done+"/"+all.length;}
+function matchRow(m){const sc=state.scores[m.id]||["",""];const done=sc[0]!==""&&sc[1]!=="";
+  return '<div class="match'+(done?' done':'')+'"><div class="mt"><span class="bst">'+localTime(m.d,m.min)+'</span><span class="utc">'+fmtUTC(m.min)+' UTC</span></div>'+
+    '<span class="gb">'+m.g+'</span>'+
+    '<div class="mteams"><div class="mt-home"><span class="nm">'+tn(m.home)+'</span>'+fl(m.home)+'</div>'+
+    '<div class="msc"><input inputmode="numeric" data-id="'+m.id+'" data-s="0" value="'+sc[0]+'" class="'+(sc[0]!==""?"filled":"")+'"><span class="dash">:</span><input inputmode="numeric" data-id="'+m.id+'" data-s="1" value="'+sc[1]+'" class="'+(sc[1]!==""?"filled":"")+'"></div>'+
+    '<div class="mt-away">'+fl(m.away)+'<span class="nm">'+tn(m.away)+'</span></div></div>'+
+    '<div class="mv">'+m.v+'</div>'+
+    '<button class="watch" data-w="'+m.id+'" type="button">'+T("watch_btn")+'</button></div>';}
+function renderMatches(){let h="",lastMd=0,openKey=null;
+  FX2.forEach(m=>{
+    if(m.lk!==openKey){if(openKey!==null)h+='</div></div>';
+      if(m.md!==lastMd){lastMd=m.md;h+='<div class="mddiv"><span>'+T("matchday")+' '+lastMd+'</span></div>';}
+      openKey=m.lk;const col=state.collapsed[m.lk];
+      h+='<div class="day"><button class="dayhead" data-day="'+m.lk+'"><span class="dl">'+localDateLabel(m.lk)+'</span><span class="dc">'+dayCount(m.lk)+'</span><span class="chev">'+(col?"▸":"▾")+'</span></button><div class="daybody" style="'+(col?"display:none":"")+'">';}
+    h+=matchRow(m);});
+  if(openKey!==null)h+='</div></div>';
+  document.getElementById("matches").innerHTML=h;bindMatchInputs();bindDays();bindWatchG();renderHero();}
+function bindMatchInputs(){document.querySelectorAll('#matches .msc input').forEach(inp=>{inp.addEventListener('input',e=>{
+  let v=e.target.value.replace(/[^0-9]/g,'').slice(0,2);e.target.value=v;const id=e.target.dataset.id,s=+e.target.dataset.s;
+  (state.scores[id]=state.scores[id]||["",""])[s]=v;save();e.target.classList.toggle('filled',v!=="");
+  const row=e.target.closest('.match'),sc=state.scores[id];if(row)row.classList.toggle('done',sc[0]!==""&&sc[1]!=="");
+  const day=e.target.closest('.day');if(day){const dd=day.querySelector('.dayhead').dataset.day;const dc=day.querySelector('.dc');if(dc)dc.textContent=dayCount(dd);}
+  updateProg();heroSyncG();});});}
+function bindDays(){document.querySelectorAll('#matches .dayhead').forEach(b=>{b.addEventListener('click',()=>{const d=b.dataset.day;state.collapsed[d]=!state.collapsed[d];save();renderMatches();});});}
+function setAllDays(c){const days=[...new Set(FX2.map(m=>m.lk))];days.forEach(d=>state.collapsed[d]=c);save();renderMatches();}
+
+/* ---- render: knockout ---- */
+function metaWhen(meta){if(!meta.d||!meta.t)return"";const km=(+meta.t.slice(0,2))*60+(+meta.t.slice(3,5));return localDateLabel(localKey(meta.d,km))+" "+localTime(meta.d,km);}
+function renderBracket(){const M=buildBracket(),allDone=GL.every(groupComplete);lastM=M;const nb=document.getElementById("kobanner");
+  if(!allDone){nb.style.display="flex";nb.innerHTML='<span>🔒</span> '+T("ko_locked").replace("{n}",GL.filter(groupComplete).length);}else nb.style.display="none";
+  const rounds=[{t:"Round of 32",d:"28 Jun - 4 Jul",m:R32.map(x=>[x[0],x[1],x[2]]),r32:true},...KO];let h="";
+  rounds.forEach(rd=>{h+='<div class="round"><div class="rtitle">'+roundTitle(rd.t)+'<span class="dt">'+rd.d+'</span></div><div class="rcol">';
+    rd.m.forEach(mm=>h+=tieHtml(mm[0],M[mm[0]]||{},rd,mm));h+='</div></div>';});
+  document.getElementById("bracket").innerHTML=h;
+  const fw=koWinner(104),cw=document.getElementById("champWrap");
+  if(fw){const m=M[104];const c=fw==="home"?m.home:m.away;cw.innerHTML='<div class="champ"><div class="lbl">'+T("champ")+'</div><div class="nm">'+(FLAG[c]||"")+' '+tn(c)+'</div></div>';}else cw.innerHTML="";
+  bindKO();renderPulse();}
+function tieHtml(no,pair,rd,mm){const sc=state.ko[no]||["",""],w=koWinner(no),meta=KOMETA[no]||{};
+  let lblH,lblA;if(rd.r32){lblH=refLabel(mm[1]);lblA=refLabel(mm[2]);}else{const pre=(rd.loser?T("loser"):T("winner"))+" ";lblH=pre+mm[1];lblA=pre+mm[2];}
+  const slot=(name,lbl,side)=>{const cls=w?(w===side?"win":"lose"):"";const disp=name?('<span class="nm">'+fl(name)+tn(name)+'</span>'):'<span class="nm tbd">'+lbl+'</span>';
+    const inp='<input class="koin" inputmode="numeric" data-ko="'+no+'" data-s="'+(side==="home"?0:1)+'" value="'+(side==="home"?sc[0]:sc[1])+'" '+(name?"":"disabled")+'>';
+    return '<div class="slot '+cls+'">'+disp+inp+'</div>';};
+  let h='<div class="tie"><div class="mno"><span>'+T("match")+' '+no+'</span><b>'+metaWhen(meta)+'</b><button class="watch" data-kow="'+no+'" type="button">'+T("watch_btn")+'</button></div>'+slot(pair.home,lblH,"home")+slot(pair.away,lblA,"away");
+  if(sc[0]!==""&&sc[1]!==""&&(+sc[0]===+sc[1])&&pair.home&&pair.away){const p=state.pen[no];
+    h+='<div class="pens"><span>'+T("pens")+'</span><button data-pen="'+no+'" data-w="home" class="'+(p==="home"?"on":"")+'">'+(FLAG[pair.home]||"H")+'</button><button data-pen="'+no+'" data-w="away" class="'+(p==="away"?"on":"")+'">'+(FLAG[pair.away]||"A")+'</button></div>';}
+  h+='<div class="kv">'+(meta.v||"")+'</div></div>';return h;}
+function bindKO(){document.querySelectorAll('#bracket .koin').forEach(inp=>{inp.addEventListener('input',e=>{
+  let v=e.target.value.replace(/[^0-9]/g,'').slice(0,2);e.target.value=v;const no=e.target.dataset.ko,s=+e.target.dataset.s;
+  state.ko[no]=state.ko[no]||["",""];state.ko[no][s]=v;
+  if(!(state.ko[no][0]!==""&&state.ko[no][1]!==""&&+state.ko[no][0]===+state.ko[no][1]))delete state.pen[no];
+  save();renderBracket();heroPatchKo(no);});});
+  document.querySelectorAll('#bracket [data-pen]').forEach(b=>{b.addEventListener('click',()=>{state.pen[b.dataset.pen]=b.dataset.w;save();renderBracket();heroPatchKo(b.dataset.pen);});});
+  document.querySelectorAll('#bracket .watch').forEach(b=>{b.addEventListener('click',e=>{e.stopPropagation();openWatch({kind:"ko",no:+b.dataset.kow});});});}
+
+function updateProg(){document.getElementById("prog").textContent=GL.filter(groupComplete).length+" / 12";renderStats();}
+function show(v){if(!["G","M","K","S"].includes(v))v="G";state.tab=v;save();["G","M","K","S"].forEach(x=>{const view=document.getElementById("view"+x),tab=document.getElementById("tab"+x),on=x===v;if(view){view.classList.toggle("on",on);if(on){view.style.animation="none";void view.offsetHeight;view.style.animation="";}}if(tab){tab.classList.toggle("on",on);tab.setAttribute("aria-selected",String(on));}});
+  if(v==="G"){renderStandings();renderThirds();}if(v==="M")renderMatches();if(v==="K")renderBracket();if(v==="S")renderStats();}
+function resetAll(){if(!confirm(T("reset_confirm")))return;localStorage.removeItem("wc26");const l=lang,tb=state.tab;state=load();state.lang=l;state.tab=tb;save();applyLang();show(tb);}
+
+
+/* ---- watch on ---- */
+Object.assign(I18N.en,{watch_btn:"Watch",watch_eyebrow:"Watch on",
+ watch_note:"Rights are geo-locked. Pick where you are watching from.",
+ reg_uk:"UK",reg_br:"Brazil",pill_free:"Free",pill_paid:"Paid",pill_tbc:"TBC",
+ w_bbc:"BBC One \u00b7 iPlayer",w_bbc_d:"Live on BBC One and BBC iPlayer",
+ w_r5l:"BBC Radio 5 Live",w_r5l_d:"Live radio commentary",
+ w_itv:"ITV1 \u00b7 ITVX",w_itv_d:"Live on ITV1 and streaming on ITVX",
+ w_stv:"STV \u00b7 STV Player",w_stv_d:"In Scotland",
+ w_caze:"Caz\u00e9TV",w_caze_d:"All 104 matches free on YouTube",
+ w_globo:"Globo \u00b7 Globoplay",w_globo_br:"Brazil matches free-to-air and streaming",w_globo_sel:"Selected matches free-to-air",
+ w_sbt:"SBT",w_sbt_d:"Selected matches free-to-air",
+ w_sportv:"sportv",w_sportv_d:"All matches \u00b7 pay TV",
+ w_tbc:"BBC / ITV",w_tbc_d:"Broadcaster to be confirmed",
+ w_final_d:"The final is shown by both broadcasters"});
+Object.assign(I18N.pt,{watch_btn:"Onde ver",watch_eyebrow:"Onde assistir",
+ watch_note:"Os direitos s\u00e3o por regi\u00e3o. Escolha de onde voc\u00ea vai assistir.",
+ reg_uk:"Reino Unido",reg_br:"Brasil",pill_free:"Gr\u00e1tis",pill_paid:"Pago",pill_tbc:"A definir",
+ w_bbc:"BBC One \u00b7 iPlayer",w_bbc_d:"Ao vivo na BBC One e no BBC iPlayer",
+ w_r5l:"BBC Radio 5 Live",w_r5l_d:"Narra\u00e7\u00e3o ao vivo no r\u00e1dio",
+ w_itv:"ITV1 \u00b7 ITVX",w_itv_d:"Ao vivo na ITV1 e em streaming no ITVX",
+ w_stv:"STV \u00b7 STV Player",w_stv_d:"Na Esc\u00f3cia",
+ w_caze:"Caz\u00e9TV",w_caze_d:"Todos os 104 jogos de gra\u00e7a no YouTube",
+ w_globo:"Globo \u00b7 Globoplay",w_globo_br:"Jogos do Brasil na TV aberta e no streaming",w_globo_sel:"Jogos selecionados na TV aberta",
+ w_sbt:"SBT",w_sbt_d:"Jogos selecionados na TV aberta",
+ w_sportv:"sportv",w_sportv_d:"Todos os jogos \u00b7 TV por assinatura",
+ w_tbc:"BBC / ITV",w_tbc_d:"Emissora a confirmar",
+ w_final_d:"A final passa nas duas emissoras"});
+const ITVIDS=[0,1,4,7,8,9,11,12,14,18,21,22,25,26,29,30,31,33,37,39,42,43,44,47,48,49,58,59,60,61,62,63,66,67];
+function ukChan(id){return ITVIDS.indexOf(+String(id).slice(1))>-1?"itv":"bbc";}
+let lastM={},wOpen=null,wPrevFocus=null;
+function ukOutlets(ref){
+  if(ref.kind==="ko"){
+    if(ref.no===104)return[
+      {mono:"BBC",tint:"#ffffff",name:T("w_bbc"),desc:T("w_final_d"),pill:"free",url:"https://www.bbc.co.uk/iplayer"},
+      {mono:"ITV",tint:"#23c4cf",name:T("w_itv"),desc:T("w_final_d"),pill:"free",url:"https://www.itv.com/watch"}];
+    return[{mono:"TV",tint:"#e6c069",name:T("w_tbc"),desc:T("w_tbc_d"),pill:"tbc"}];
+  }
+  return ukChan(ref.id)==="bbc"
+    ?[{mono:"BBC",tint:"#ffffff",name:T("w_bbc"),desc:T("w_bbc_d"),pill:"free",url:"https://www.bbc.co.uk/iplayer"},
+      {mono:"5L",tint:"#ffffff",name:T("w_r5l"),desc:T("w_r5l_d"),pill:"free"}]
+    :[{mono:"ITV",tint:"#23c4cf",name:T("w_itv"),desc:T("w_itv_d"),pill:"free",url:"https://www.itv.com/watch"},
+      {mono:"STV",tint:"#23c4cf",name:T("w_stv"),desc:T("w_stv_d"),pill:"free"}];
+}
+function brOutlets(ref){
+  const isBR=ref.kind==="g"&&(ref.m.home==="Brazil"||ref.m.away==="Brazil");
+  return[
+   {mono:"CZ",tint:"#ffd400",name:T("w_caze"),desc:T("w_caze_d"),pill:"free",url:"https://www.youtube.com/@CazeTV"},
+   {mono:"G",tint:"#e6442e",name:T("w_globo"),desc:isBR?T("w_globo_br"):T("w_globo_sel"),pill:"free",url:"https://globoplay.globo.com"},
+   {mono:"SBT",tint:"#00a859",name:T("w_sbt"),desc:T("w_sbt_d"),pill:"free",url:"https://www.sbt.com.br"},
+   {mono:"SPT",tint:"#ff5a00",name:T("w_sportv"),desc:T("w_sportv_d"),pill:"paid"}];
+}
+function watchTitle(ref){
+  if(ref.kind==="g")return fl(ref.m.home)+" "+tn(ref.m.home)+' <span style="color:var(--dim)">v</span> '+tn(ref.m.away)+" "+fl(ref.m.away);
+  const p=lastM[ref.no]||{};
+  if(p.home&&p.away)return fl(p.home)+" "+tn(p.home)+' <span style="color:var(--dim)">v</span> '+tn(p.away)+" "+fl(p.away);
+  return T("match")+" "+ref.no;
+}
+function watchMeta(ref){
+  if(ref.kind==="g"){const m=ref.m;return localDateLabel(m.lk)+" \u00b7 "+localTime(m.d,m.min)+" \u00b7 "+m.v;}
+  const meta=KOMETA[ref.no]||{};return (metaWhen(meta)||"")+(meta.v?" \u00b7 "+meta.v:"");
+}
+function renderWatch(){
+  const ref=wOpen;if(!ref)return;
+  document.getElementById("wsEyebrow").textContent=T("watch_eyebrow");
+  document.getElementById("wsTitle").innerHTML=watchTitle(ref);
+  document.getElementById("wsMeta").textContent=watchMeta(ref);
+  document.getElementById("wsNote").textContent=T("watch_note");
+  const reg=state.region||"uk";
+  document.getElementById("wsRegion").innerHTML=
+   '<button type="button" data-reg="uk" class="'+(reg==="uk"?"on":"")+'">'+T("reg_uk")+'</button>'+
+   '<button type="button" data-reg="br" class="'+(reg==="br"?"on":"")+'">'+T("reg_br")+'</button>';
+  document.querySelectorAll("#wsRegion button").forEach(b=>b.addEventListener("click",()=>{state.region=b.dataset.reg;save();renderWatch();}));
+  const rows=(reg==="uk"?ukOutlets(ref):brOutlets(ref));
+  document.getElementById("wsList").innerHTML=rows.map((o,i)=>{
+    const tag=o.url?"a":"div";
+    const tile='<span class="wmono" style="background:'+o.tint+'1c;color:'+o.tint+'">'+o.mono+'</span>';
+    const main='<span class="wmain"><span class="wname">'+o.name+'</span><br><span class="wdesc">'+o.desc+'</span></span>';
+    const pill='<span class="wpill '+o.pill+'">'+T(o.pill==="free"?"pill_free":o.pill==="paid"?"pill_paid":"pill_tbc")+'</span>';
+    return '<'+tag+' class="wrow" style="animation-delay:'+(60+i*45)+'ms"'+(o.url?' href="'+o.url+'" target="_blank" rel="noopener"':'')+'>'+tile+main+pill+'</'+tag+'>';
+  }).join("");
+}
+function openWatch(ref){
+  if(ref.kind==="g"){const m=FX2.find(x=>x.id===ref.id);if(!m)return;ref.m=m;}
+  wOpen=ref;wPrevFocus=document.activeElement;
+  renderWatch();
+  const sc=document.getElementById("wscrim"),sh=document.getElementById("wsheet");
+  sc.hidden=false;sh.hidden=false;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{sc.classList.add("on");sh.classList.add("on");}));
+  document.body.style.overflow="hidden";
+  setTimeout(()=>{const c=document.getElementById("wsClose");if(c)c.focus();},80);
+}
+function closeWatch(){
+  if(!wOpen)return;wOpen=null;
+  const sc=document.getElementById("wscrim"),sh=document.getElementById("wsheet");
+  sc.classList.remove("on");sh.classList.remove("on");
+  setTimeout(()=>{sc.hidden=true;sh.hidden=true;sh.style.transform="";sh.style.transition="";},320);
+  document.body.style.overflow="";
+  if(wPrevFocus&&wPrevFocus.focus)wPrevFocus.focus();wPrevFocus=null;
+}
+function bindWatchG(){document.querySelectorAll("#matches .watch").forEach(b=>{b.addEventListener("click",e=>{e.stopPropagation();openWatch({kind:"g",id:b.dataset.w});});});}
+document.getElementById("wscrim").addEventListener("click",closeWatch);
+document.getElementById("wsClose").addEventListener("click",closeWatch);
+document.addEventListener("keydown",e=>{
+  if(!wOpen)return;
+  if(e.key==="Escape"){e.preventDefault();closeWatch();return;}
+  if(e.key==="Tab"){
+    const f=[...document.querySelectorAll("#wsheet button,#wsheet a[href]")].filter(x=>x.offsetParent!==null);
+    if(!f.length)return;const first=f[0],last=f[f.length-1];
+    if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}
+    else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}
+  }
+});
+(function(){
+  const sh=document.getElementById("wsheet");let y0=null,dy=0;
+  sh.addEventListener("touchstart",e=>{if(window.innerWidth>600)return;if(sh.scrollTop>0)return;y0=e.touches[0].clientY;dy=0;},{passive:true});
+  sh.addEventListener("touchmove",e=>{if(y0===null)return;dy=Math.max(0,e.touches[0].clientY-y0);if(dy>0){sh.style.transition="none";sh.style.transform="translateY("+dy+"px)";}},{passive:true});
+  sh.addEventListener("touchend",()=>{if(y0===null)return;sh.style.transition="";if(dy>80)closeWatch();else sh.style.transform="";y0=null;dy=0;});
+})();
+
+
+/* ---- today hero ---- */
+Object.assign(I18N.en,{hero_today:"Today's Matches",hero_live:"Live",hero_ft:"FT",
+ hero_none:"No matches today.",hero_next:"Next up",hero_in:"in {x}",
+ hero_done:"That is a wrap. The 2026 World Cup is complete.",
+ hero_match_one:"1 match",hero_match_n:"{n} matches"});
+Object.assign(I18N.pt,{hero_today:"Jogos de Hoje",hero_live:"Ao vivo",hero_ft:"FIM",
+ hero_none:"Sem jogos hoje.",hero_next:"A seguir",hero_in:"em {x}",
+ hero_done:"Acabou. A Copa de 2026 est\u00e1 encerrada.",
+ hero_match_one:"1 jogo",hero_match_n:"{n} jogos"});
+let heroM={};
+function todayKey(){const d=new Date();return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());}
+function rdLabel(no){return no<=88?"R32":no<=96?"R16":no<=100?"QF":no<=102?"SF":no===103?"3P":"F";}
+function koEntries(){return Object.keys(KOMETA).map(no=>{const meta=KOMETA[no];const km=(+meta.t.slice(0,2))*60+(+meta.t.slice(3,5));return{no:+no,meta,km,ms:absMs(meta.d,km),lk:localKey(meta.d,km)};}).sort((a,b)=>a.ms-b.ms);}
+function heroStatus(ms,dur,done){const now=Date.now();if(done)return"ft";if(now>=ms&&now<ms+dur*60000)return"live";return"up";}
+function relTime(ms){const m=Math.max(1,Math.round((ms-Date.now())/60000));if(m<60)return m+"min";const h=Math.round(m/60);if(h<48)return h+"h";return Math.round(h/24)+"d";}
+function heroTimeCell(st,timeStr,utcStr){
+ if(st==="live")return '<div class="mt"><span class="hlive">'+T("hero_live")+'</span></div>';
+ if(st==="ft")return '<div class="mt"><span class="bst">'+timeStr+'</span><span class="hft">'+T("hero_ft")+'</span></div>';
+ return '<div class="mt"><span class="bst">'+timeStr+'</span><span class="utc">'+utcStr+'</span></div>';}
+function heroMatchRow(m){const sc=state.scores[m.id]||["",""];const done=sc[0]!==""&&sc[1]!=="";
+ const st=heroStatus(m.ms,120,done);
+ return '<div class="match'+(done?' done':'')+'" data-hrow="'+m.id+'">'+heroTimeCell(st,localTime(m.d,m.min),fmtUTC(m.min)+' UTC')+
+  '<span class="gb">'+m.g+'</span>'+
+  '<div class="mteams"><div class="mt-home"><span class="nm">'+tn(m.home)+'</span>'+fl(m.home)+'</div>'+
+  '<div class="msc"><input inputmode="numeric" data-hid="'+m.id+'" data-s="0" value="'+sc[0]+'" class="'+(sc[0]!==""?"filled":"")+'"><span class="dash">:</span><input inputmode="numeric" data-hid="'+m.id+'" data-s="1" value="'+sc[1]+'" class="'+(sc[1]!==""?"filled":"")+'"></div>'+
+  '<div class="mt-away">'+fl(m.away)+'<span class="nm">'+tn(m.away)+'</span></div></div>'+
+  '<div class="mv">'+m.v+'</div><button class="watch" data-w="'+m.id+'" type="button">'+T("watch_btn")+'</button></div>';}
+function heroPensHtml(no){const sc=state.ko[no]||["",""];const pair=heroM[no]||{};
+ if(!(sc[0]!==""&&sc[1]!==""&&+sc[0]===+sc[1]&&pair.home&&pair.away))return"";
+ const p=state.pen[no];
+ return '<div class="pens"><span>'+T("pens")+'</span><button type="button" data-hpen="'+no+'" data-w="home" class="'+(p==="home"?"on":"")+'">'+(FLAG[pair.home]||"H")+'</button><button type="button" data-hpen="'+no+'" data-w="away" class="'+(p==="away"?"on":"")+'">'+(FLAG[pair.away]||"A")+'</button></div>';}
+function heroKoRow(k){const pair=heroM[k.no]||{};const sc=state.ko[k.no]||["",""];const w=koWinner(k.no);
+ const st=heroStatus(k.ms,150,!!w);
+ const dis=(pair.home&&pair.away)?"":" disabled";
+ const sideH=pair.home?('<span class="nm">'+tn(pair.home)+'</span>'+fl(pair.home)):('<span class="nm tbd">'+T("tbd")+'</span>');
+ const sideA=pair.away?(fl(pair.away)+'<span class="nm">'+tn(pair.away)+'</span>'):('<span class="nm tbd">'+T("tbd")+'</span>');
+ return '<div class="hkwrap" data-hkw="'+k.no+'"><div class="match'+(w?' done':'')+'">'+heroTimeCell(st,localTime(k.meta.d,k.km),fmtUTC(k.km)+' UTC')+
+  '<span class="gb gbk">'+rdLabel(k.no)+'</span>'+
+  '<div class="mteams"><div class="mt-home">'+sideH+'</div>'+
+  '<div class="msc"><input inputmode="numeric" data-hko="'+k.no+'" data-s="0" value="'+sc[0]+'" class="'+(sc[0]!==""?"filled":"")+'"'+dis+'><span class="dash">:</span><input inputmode="numeric" data-hko="'+k.no+'" data-s="1" value="'+sc[1]+'" class="'+(sc[1]!==""?"filled":"")+'"'+dis+'></div>'+
+  '<div class="mt-away">'+sideA+'</div></div>'+
+  '<div class="mv">'+(k.meta.v||"")+'</div><button class="watch" data-kow="'+k.no+'" type="button">'+T("watch_btn")+'</button></div>'+
+  '<div data-hpens="'+k.no+'">'+heroPensHtml(k.no)+'</div></div>';}
+function renderHero(){
+ const el=document.getElementById("hero");if(!el)return;
+ const tk=todayKey();
+ const gms=FX2.filter(m=>m.lk===tk);
+ heroM=buildBracket();
+ const kos=koEntries().filter(k=>k.lk===tk);
+ const total=gms.length+kos.length;
+ let h='<div class="herohead"><div><span class="he">'+T("hero_today")+'</span><span class="hd">'+localDateLabel(tk)+'</span></div><span class="hc">'+(total===1?T("hero_match_one"):T("hero_match_n").replace("{n}",total))+'</span></div>';
+ if(!total){
+  h+='<div class="heronone">'+T("hero_none")+'</div>';
+ }else{gms.forEach(m=>h+=heroMatchRow(m));kos.forEach(k=>h+=heroKoRow(k));}
+ el.innerHTML=h;bindHeroInputs();
+}
+function heroSyncG(){const ae=document.activeElement;if(!(ae&&ae.closest&&ae.closest("#hero")))renderHero();}
+function heroPatchKo(no){
+ const wrap=document.querySelector('#hero [data-hkw="'+no+'"]');if(!wrap)return;
+ const w=koWinner(no);const row=wrap.querySelector('.match');if(row)row.classList.toggle('done',!!w);
+ wrap.querySelectorAll('input[data-hko]').forEach(i=>{const sc=state.ko[no]||["",""];const v=sc[+i.dataset.s]||"";if(document.activeElement!==i&&i.value!==v)i.value=v;i.classList.toggle('filled',v!=="");});
+ const pens=wrap.querySelector('[data-hpens]');if(pens)pens.innerHTML=heroPensHtml(no);
+}
+function bindHeroInputs(){
+ document.querySelectorAll('#hero input[data-hid]').forEach(inp=>{inp.addEventListener('input',e=>{
+  let v=e.target.value.replace(/[^0-9]/g,'').slice(0,2);e.target.value=v;
+  const id=e.target.dataset.hid,sx=+e.target.dataset.s;
+  (state.scores[id]=state.scores[id]||["",""])[sx]=v;save();
+  e.target.classList.toggle('filled',v!=="");
+  const sc=state.scores[id],done=sc[0]!==""&&sc[1]!=="";
+  const hrow=e.target.closest('.match');if(hrow)hrow.classList.toggle('done',done);
+  const twin=document.querySelector('#matches input[data-id="'+id+'"][data-s="'+sx+'"]');
+  if(twin){twin.value=v;twin.classList.toggle('filled',v!=="");
+   const r=twin.closest('.match');if(r)r.classList.toggle('done',done);
+   const day=twin.closest('.day');if(day){const dd=day.querySelector('.dayhead').dataset.day;const dc=day.querySelector('.dc');if(dc)dc.textContent=dayCount(dd);}}
+  updateProg();
+ });});
+ document.querySelectorAll('#hero input[data-hko]').forEach(inp=>{inp.addEventListener('input',e=>{
+  let v=e.target.value.replace(/[^0-9]/g,'').slice(0,2);e.target.value=v;
+  const no=e.target.dataset.hko,sx=+e.target.dataset.s;
+  state.ko[no]=state.ko[no]||["",""];state.ko[no][sx]=v;
+  if(!(state.ko[no][0]!==""&&state.ko[no][1]!==""&&+state.ko[no][0]===+state.ko[no][1]))delete state.pen[no];
+  save();renderBracket();heroPatchKo(no);
+ });});
+}
+(function(){const el=document.getElementById("hero");if(!el)return;
+ el.addEventListener("click",e=>{
+  const pb=e.target.closest("[data-hpen]");
+  if(pb){const no=pb.dataset.hpen;state.pen[no]=pb.dataset.w;save();renderBracket();heroPatchKo(no);return;}
+  const wb=e.target.closest(".watch");if(!wb)return;
+  e.stopPropagation();
+  if(wb.dataset.w)openWatch({kind:"g",id:wb.dataset.w});
+  else if(wb.dataset.kow)openWatch({kind:"ko",no:+wb.dataset.kow});
+ });
+})();
+setInterval(()=>{const ae=document.activeElement;if(ae&&ae.closest&&ae.closest("#hero"))return;if(document.getElementById("viewM").classList.contains("on"))renderHero();},60000);
+
+
+
+/* ---- premium stats: tournament overview, events-ready tables and highlight queue ---- */
+Object.assign(I18N.en,{
+ tab_stats:"Stats",stats_kicker:"Statistics hub",stats_title:"Tournament numbers",stats_intro:"Offline tournament totals stay local. Online match events can later feed goalscorers, cards and highlights without touching the core tracker.",stats_mode:"Offline core + online-ready boxes",
+ pulse_groups:"Groups complete",pulse_logged:"Matches logged",pulse_today:"Today",pulse_attack:"Top attack",pulse_goals:"Goals",pulse_avg:"Avg goals",pulse_no_scores:"No scores yet",pulse_today_empty:"No fixtures today",pulse_today_one:"1 fixture",pulse_today_many:"{n} fixtures",pulse_group_sub:"Standings and third-place table",pulse_logged_sub:"Manual results saved locally",pulse_attack_sub:"Based on entered group scores",pulse_goals_sub:"From entered results",pulse_avg_sub:"Per logged match",
+ stats_attack_h:"Top attacks",stats_defence_h:"Best defences",stats_highlights_h:"Match highlights",stats_live_h:"Online data source later",stats_gf:"GF",stats_ga:"GA",stats_result:"Result",stats_optional:"Optional",stats_live_p:"Goalscorers, cards and substitutions need a match-events feed. Highlights can use an imported JSON file, a hosted highlights.json file, manual saved links, or a backend/API later.",stats_empty:"No scores entered yet.",stats_biggest:"Biggest win",stats_highest:"Highest scoring",stats_none:"Nothing to calculate yet",stats_goals_label:"goals",stats_conceded_label:"conceded",
+ stats_scorers_h:"Golden Boot Tracker",stats_scorers_help:"Valid goals only. Own goals are excluded. The first 10 stay visible first, then scroll for the rest.",stats_player:"Player",stats_team:"Team",stats_goals_short:"Goals",stats_cards_h:"Cards & Discipline",stats_cards_short:"YC / RC",stats_player_cards:"Player cards",stats_team_cards:"Team discipline",stats_no_events:"No match event data loaded yet.",stats_no_cards:"No cards loaded yet.",stats_after_3h:"Kickoff + 3h",stats_fetch_all:"Fetch missing highlights",stats_highlights_help:"Only matches old enough to reasonably have highlights appear here. Missing rows can use imported JSON, manual links, or a YouTube search fallback.",stats_missing:"Missing",stats_ready:"Ready",stats_fetch:"Fetch",stats_try_again:"Try again",stats_watch:"Watch highlights",stats_no_highlights:"No matches are eligible for highlights yet.",stats_no_missing:"No missing eligible highlights.",stats_fetch_ok:"Highlights updated.",stats_fetch_none:"No new highlight links found.",stats_fetch_source_missing:"No highlight source found. Import a JSON file, host highlights.json with the tracker, or use a row Fetch/Add link fallback.",stats_opened_search:"No source file found, so I opened a YouTube search for this match. Add the final link if it looks right.",stats_add_link:"Add link",stats_import_highlights:"Import JSON",stats_bad_url:"That does not look like a valid http(s) URL.",stats_saved_link:"Highlight link saved.",stats_import_ok:"Highlight JSON imported.",stats_import_bad:"Could not read that JSON file.",stats_link_prompt:"Paste the highlight URL for {match}:",stats_json_hint:"Highlight JSON example: { \"G0\": { \"url\": \"https://...\", \"title\": \"Mexico v South Africa highlights\", \"source\": \"FIFA\" } }. If the tracker is opened as a local file, use Import JSON instead of direct fetch.",stats_scorers_count:"{n} scorers"
+});
+Object.assign(I18N.pt,{
+ tab_stats:"Stats",stats_kicker:"Central de estatísticas",stats_title:"Números do torneio",stats_intro:"Os totais offline ficam salvos localmente. Eventos online dos jogos podem alimentar artilheiros, cartões e destaques sem mexer no tracker principal.",stats_mode:"Base offline + caixas prontas para online",
+ pulse_groups:"Grupos completos",pulse_logged:"Jogos registrados",pulse_today:"Hoje",pulse_attack:"Melhor ataque",pulse_goals:"Gols",pulse_avg:"Média de gols",pulse_no_scores:"Sem placares ainda",pulse_today_empty:"Sem jogos hoje",pulse_today_one:"1 jogo",pulse_today_many:"{n} jogos",pulse_group_sub:"Classificação e terceiros colocados",pulse_logged_sub:"Resultados salvos neste navegador",pulse_attack_sub:"Com base nos placares da fase de grupos",pulse_goals_sub:"Dos resultados inseridos",pulse_avg_sub:"Por jogo registrado",
+ stats_attack_h:"Melhores ataques",stats_defence_h:"Melhores defesas",stats_highlights_h:"Destaques dos jogos",stats_live_h:"Fonte online depois",stats_gf:"GP",stats_ga:"GC",stats_result:"Resultado",stats_optional:"Opcional",stats_live_p:"Artilheiros, cartões e substituições precisam de um feed de eventos dos jogos. Os destaques podem começar com um highlights.json ao lado do tracker e depois evoluir para backend/API.",stats_empty:"Nenhum placar inserido ainda.",stats_biggest:"Maior vitória",stats_highest:"Mais gols",stats_none:"Nada para calcular ainda",stats_goals_label:"gols",stats_conceded_label:"sofridos",
+ stats_scorers_h:"Artilharia",stats_scorers_help:"Somente gols válidos. Gols contra ficam fora. Os 10 primeiros aparecem primeiro, depois é só rolar o resto.",stats_player:"Jogador",stats_team:"Seleção",stats_goals_short:"Gols",stats_cards_h:"Cartões e Disciplina",stats_cards_short:"CA / CV",stats_player_cards:"Cartões por jogador",stats_team_cards:"Disciplina por seleção",stats_no_events:"Nenhum evento de jogo carregado ainda.",stats_no_cards:"Nenhum cartão carregado ainda.",stats_after_3h:"Jogo + 3h",stats_fetch_all:"Buscar destaques faltantes",stats_highlights_help:"Só aparecem aqui jogos com tempo suficiente para já terem destaques. Linhas faltantes podem usar JSON importado, links manuais ou busca no YouTube como fallback.",stats_missing:"Faltando",stats_ready:"Pronto",stats_fetch:"Buscar",stats_try_again:"Tentar de novo",stats_watch:"Ver destaques",stats_no_highlights:"Nenhum jogo elegível para destaques ainda.",stats_no_missing:"Nenhum destaque elegível faltando.",stats_fetch_ok:"Destaques atualizados.",stats_fetch_none:"Nenhum novo link de destaque encontrado.",stats_fetch_source_missing:"Nenhuma fonte de destaques encontrada. Importe um JSON, hospede highlights.json junto com o tracker ou use Buscar/Adicionar link na linha.",stats_opened_search:"Nenhum arquivo de fonte encontrado, então abri uma busca no YouTube para este jogo. Adicione o link final se estiver correto.",stats_add_link:"Adicionar link",stats_import_highlights:"Importar JSON",stats_bad_url:"Isso não parece ser uma URL http(s) válida.",stats_saved_link:"Link de destaque salvo.",stats_import_ok:"JSON de destaques importado.",stats_import_bad:"Não consegui ler esse arquivo JSON.",stats_link_prompt:"Cole a URL dos destaques para {match}:",stats_json_hint:"Exemplo de JSON de destaques: { \"G0\": { \"url\": \"https://...\", \"title\": \"México x África do Sul melhores momentos\", \"source\": \"FIFA\" } }. Se abrir o tracker como arquivo local, use Importar JSON em vez do fetch direto.",stats_scorers_count:"{n} artilheiros"
+});
+const HIGHLIGHTS_SOURCE="highlights.json";
+const HIGHLIGHT_DELAY_MS=3*60*60*1000;
+let highlightNotice="";
+function esc(v){return String(v==null?"":v).replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));}
+function scoreFilled(sc){return sc&&sc[0]!==""&&sc[1]!=="";}
+function completedGroupMatches(){return FX2.filter(m=>scoreFilled(state.scores[m.id])).length;}
+function completedKoMatches(){return Object.keys(KOMETA).filter(no=>!!koWinner(no)).length;}
+function todayFixtureCount(){const tk=todayKey();return FX2.filter(m=>m.lk===tk).length+koEntries().filter(k=>k.lk===tk).length;}
+function allTeamStats(){const out=[];GL.forEach(gl=>{const st=groupStats(gl);GROUPS[gl].forEach(t=>out.push({...st[t],g:gl}));});return out;}
+function topAttack(){let best=null;allTeamStats().forEach(s=>{if(s.gf>0&&(!best||s.gf>best.gf||s.gf===best.gf&&s.gd>best.gd))best=s;});return best;}
+function bestDefence(){let teams=allTeamStats().filter(s=>s.pld>0);teams.sort((a,b)=>a.ga-b.ga||b.pld-a.pld||b.gd-a.gd||b.gf-a.gf);return teams[0]||null;}
+function loggedResults(){const out=[];FX2.forEach(m=>{const sc=state.scores[m.id];if(!scoreFilled(sc))return;const x=+sc[0],y=+sc[1];out.push({kind:"group",label:tn(m.home)+" "+x+"-"+y+" "+tn(m.away),goals:x+y,diff:Math.abs(x-y),winner:x===y?null:(x>y?m.home:m.away)});});const bm=buildBracket();Object.keys(KOMETA).forEach(no=>{const sc=state.ko[no];if(!scoreFilled(sc))return;const x=+sc[0],y=+sc[1],m=bm[no]||{};const h=m.home?tn(m.home):T("tbd"),a=m.away?tn(m.away):T("tbd");out.push({kind:"ko",label:h+" "+x+"-"+y+" "+a,goals:x+y,diff:Math.abs(x-y),winner:x===y?null:(x>y?m.home:m.away)});});return out;}
+function totalGoals(){return loggedResults().reduce((n,m)=>n+m.goals,0);}
+function pulseCard(k,v,s,pct){return '<div class="pulse-card"><div class="pulse-k">'+k+'</div><div class="pulse-v">'+v+'</div><div class="pulse-s">'+s+'</div><div class="pulse-bar"><span class="pulse-fill" style="width:'+Math.max(0,Math.min(100,pct||0))+'%"></span></div></div>';}
+function statsRows(arr,type){if(!arr.length)return '<div class="stats-empty">'+T("stats_empty")+'</div>';return arr.slice(0,6).map((s,i)=>'<div class="stats-row"><span class="rk">'+(i+1)+'</span><span class="name">'+fl(s.t)+tn(s.t)+'</span><span class="val">'+(type==="ga"?s.ga:s.gf)+'</span></div>').join("");}
+function eventBuckets(){const ev=state.events&&typeof state.events==="object"?state.events:{};const arr=[];Object.keys(ev).forEach(mid=>{const rows=Array.isArray(ev[mid])?ev[mid]:[];rows.forEach(e=>arr.push({...e,matchId:mid}));});return arr;}
+function evText(e,k){const v=e[k];if(v&&typeof v==="object")return v.name||v.shortName||v.displayName||"";return v||"";}
+function evPlayer(e){return evText(e,"player")||e.playerName||e.scorer||e.name||"";}
+function evTeam(e){return evText(e,"team")||e.teamName||"";}
+function evType(e){return String(e.type||e.event||e.category||"").toLowerCase();}
+function evDetail(e){return String(e.detail||e.outcome||e.reason||e.description||"").toLowerCase();}
+function isOwnGoal(e){const tx=evType(e)+" "+evDetail(e);return e.ownGoal===true||e.own_goal===true||/own\s*goal|autogol|gol contra/.test(tx);}
+function isGoalEvent(e){const tx=evType(e)+" "+evDetail(e);return !isOwnGoal(e)&&(/\bgoal\b|normal goal|penalty goal|gol\b/.test(tx))&&!/missed/.test(tx);}
+function isPenaltyGoal(e){const tx=evType(e)+" "+evDetail(e);return isGoalEvent(e)&&/penalty/.test(tx);}
+function isYellowEvent(e){const tx=evType(e)+" "+evDetail(e);return /yellow/.test(tx)||/cart[aã]o amarelo/.test(tx);}
+function isRedEvent(e){const tx=evType(e)+" "+evDetail(e);return /red/.test(tx)||/cart[aã]o vermelho/.test(tx);}
+function goalScorers(){const map={};eventBuckets().forEach(e=>{if(!isGoalEvent(e))return;const p=evPlayer(e),team=evTeam(e);if(!p)return;const key=p+"||"+team;(map[key]=map[key]||{player:p,team,goals:0,pens:0}).goals++;if(isPenaltyGoal(e))map[key].pens++;});return Object.values(map).sort((a,b)=>b.goals-a.goals||a.pens-b.pens||a.player.localeCompare(b.player));}
+function cardStats(){const players={},teams={};eventBuckets().forEach(e=>{const y=isYellowEvent(e),r=isRedEvent(e);if(!y&&!r)return;const p=evPlayer(e)||T("tbd"),team=evTeam(e)||"";const pk=p+"||"+team;(players[pk]=players[pk]||{name:p,team,yc:0,rc:0});(teams[team]=teams[team]||{name:team||T("tbd"),yc:0,rc:0});if(y){players[pk].yc++;teams[team].yc++;}if(r){players[pk].rc++;teams[team].rc++;}});const byPlayer=Object.values(players).sort((a,b)=>(b.rc-a.rc)||(b.yc-a.yc)||a.name.localeCompare(b.name));const byTeam=Object.values(teams).sort((a,b)=>(b.rc-a.rc)||(b.yc-a.yc)||a.name.localeCompare(b.name));return{players:byPlayer,teams:byTeam};}
+function renderScorers(){const el=document.getElementById("statsScorers"),cnt=document.getElementById("goldenBootCount");if(!el)return;const rows=goalScorers();if(cnt)cnt.textContent=T("stats_scorers_count").replace("{n}",rows.length);if(!rows.length){el.innerHTML='<div class="stats-empty">'+T("stats_no_events")+'</div>';return;}el.innerHTML=rows.map((r,i)=>'<div class="stats-row stats-scorer-row '+(i<10?'top-ten':'')+'"><span class="rk">'+(i+1)+'</span><span class="name">'+esc(r.player)+'</span><span class="team-name">'+(r.team?fl(r.team)+esc(tn(r.team)):"-")+'</span><span class="val">'+r.goals+'</span></div>').join("");}
+function renderCards(){const pEl=document.getElementById("statsPlayerCards"),tEl=document.getElementById("statsTeamCards");if(!pEl||!tEl)return;const c=cardStats();const row=(r,isTeam)=>'<div class="discipline-row"><span class="name">'+(isTeam&&FLAG[r.name]?fl(r.name):"")+esc(isTeam?tn(r.name):r.name)+(r.team&&!isTeam?' <span class="team-name">'+esc(tn(r.team))+'</span>':"")+'</span><span class="card-stat">'+r.yc+'</span><span class="card-stat">'+r.rc+'</span></div>';pEl.innerHTML=c.players.length?c.players.slice(0,10).map(r=>row(r,false)).join(""):'<div class="stats-empty">'+T("stats_no_cards")+'</div>';tEl.innerHTML=c.teams.length?c.teams.slice(0,10).map(r=>row(r,true)).join(""):'<div class="stats-empty">'+T("stats_no_cards")+'</div>';}
+function highlightScore(m){const sc=m.score;if(scoreFilled(sc))return sc[0]+"-"+sc[1]+" FT";return "FT";}
+function allHighlightMatches(){const bm=buildBracket();const group=FX2.map(m=>({id:m.id,kind:"group",home:m.home,away:m.away,ms:m.ms,score:state.scores[m.id]||null,venue:m.v,title:tn(m.home)+" vs "+tn(m.away),searchHome:m.home,searchAway:m.away}));const ko=koEntries().map(k=>{const p=bm[k.no]||{},home=p.home,away=p.away;return{id:"KO"+k.no,kind:"ko",no:k.no,home,away,ms:k.ms,score:state.ko[k.no]||null,venue:k.meta.v,title:(home?tn(home):T("match")+" "+k.no)+" vs "+(away?tn(away):T("tbd")),searchHome:home||"",searchAway:away||""};});return group.concat(ko).sort((a,b)=>a.ms-b.ms);}
+function highlightEligible(m){return Date.now()>=m.ms+HIGHLIGHT_DELAY_MS;}
+function highlightRecord(id){return (state.highlights&&state.highlights[id])||null;}
+function isHighlightReady(r){return !!(r&&r.url);}
+function highlightSearchUrl(m){
+  const q=["FIFA World Cup 2026",m.searchHome||m.home||"",m.searchAway||m.away||"","highlights"].filter(Boolean).join(" ");
+  return "https://www.youtube.com/results?search_query="+encodeURIComponent(q);
+}
+function openHighlightSearch(m){
+  const url=highlightSearchUrl(m);
+  try{window.open(url,"_blank","noopener,noreferrer");}catch(e){location.href=url;}
+}
+function renderHighlights(){const el=document.getElementById("statsHighlights"),note=document.getElementById("highlightFetchNote");if(!el)return;if(note)note.textContent=highlightNotice||"";const matches=allHighlightMatches().filter(m=>highlightEligible(m));if(!matches.length){el.innerHTML='<div class="stats-empty">'+T("stats_no_highlights")+'</div>';return;}el.innerHTML=matches.map(m=>{const rec=highlightRecord(m.id),ready=isHighlightReady(rec);const label=ready?T("stats_ready"):T("stats_missing");const status='<span class="highlight-status '+(ready?'ready':'missing')+'">'+label+'</span>';const action=ready?'<a href="'+esc(rec.url)+'" target="_blank" rel="noopener noreferrer">'+T("stats_watch")+'</a>':'<button type="button" data-fetch-highlight="'+esc(m.id)+'">'+(rec&&rec.checkedAt?T("stats_try_again"):T("stats_fetch"))+'</button><button type="button" data-add-highlight="'+esc(m.id)+'">'+T("stats_add_link")+'</button>';return '<div class="highlight-row"><span class="highlight-fixture">'+esc(m.title)+'</span><span class="highlight-score">'+highlightScore(m)+'</span>'+status+'<span class="highlight-action">'+action+'</span></div>';}).join("");}
+function normaliseHighlight(entry){if(!entry)return null;if(typeof entry==="string")return{url:entry,title:"",source:""};const url=entry.url||entry.href||entry.link;if(!url)return null;return{url,title:entry.title||"",source:entry.source||"",publishedAt:entry.publishedAt||entry.published_at||"",confidence:entry.confidence||""};}
+function findHighlight(data,m){if(!data)return null;let hit=null;if(!Array.isArray(data)&&typeof data==="object")hit=data[m.id];if(!hit&&data&&data.highlights&&typeof data.highlights==="object")hit=data.highlights[m.id];if(!hit&&Array.isArray(data)){hit=data.find(x=>(x.id||x.matchId||x.match_id)===m.id);if(!hit&&m.searchHome&&m.searchAway){const h=m.searchHome.toLowerCase(),a=m.searchAway.toLowerCase();hit=data.find(x=>{const t=String(x.title||"").toLowerCase();return t.includes(h)&&t.includes(a);});}}return normaliseHighlight(hit);}
+async function loadHighlightSource(){const res=await fetch(HIGHLIGHTS_SOURCE,{cache:"no-store"});if(!res.ok)throw new Error("source");return await res.json();}
+function applyHighlightData(data,targets){
+  let found=0;
+  targets.forEach(m=>{const rec=findHighlight(data,m);if(rec){state.highlights[m.id]=Object.assign({status:"ready",fetchedAt:new Date().toISOString()},rec);found++;}});
+  if(found){save();}
+  return found;
+}
+async function fetchHighlights(which){const all=allHighlightMatches().filter(m=>highlightEligible(m));const targets=(which==="all"?all:all.filter(m=>m.id===which)).filter(m=>!isHighlightReady(highlightRecord(m.id)));if(!targets.length){highlightNotice=T("stats_no_missing");renderHighlights();return;}let data;try{data=await loadHighlightSource();}catch(e){if(which!=="all"&&targets.length===1){openHighlightSearch(targets[0]);highlightNotice=T("stats_opened_search");}else{highlightNotice=T("stats_fetch_source_missing");}renderHighlights();return;}let found=applyHighlightData(data,targets);targets.forEach(m=>{if(!isHighlightReady(highlightRecord(m.id))){state.highlights[m.id]=Object.assign({},state.highlights[m.id]||{},{status:"missing",checkedAt:new Date().toISOString()});}});if(!found&&which!=="all"&&targets.length===1){openHighlightSearch(targets[0]);highlightNotice=T("stats_opened_search");}else{highlightNotice=found?T("stats_fetch_ok"):T("stats_fetch_none");}save();renderHighlights();}
+function addManualHighlight(id){
+  const m=allHighlightMatches().find(x=>x.id===id);
+  if(!m)return;
+  const url=prompt(T("stats_link_prompt").replace("{match}",m.title));
+  if(url==null)return;
+  const clean=url.trim();
+  if(!/^https?:\/\//i.test(clean)){highlightNotice=T("stats_bad_url");renderHighlights();return;}
+  state.highlights[id]={status:"ready",url:clean,title:m.title+" highlights",source:"manual",fetchedAt:new Date().toISOString()};
+  highlightNotice=T("stats_saved_link");
+  save();renderHighlights();
+}
+async function importHighlightFile(file){
+  try{
+    const text=await file.text();
+    const data=JSON.parse(text);
+    const targets=allHighlightMatches();
+    const found=applyHighlightData(data,targets);
+    highlightNotice=T("stats_import_ok")+" "+found+" "+(found===1?"link":"links")+".";
+    save();renderHighlights();
+  }catch(e){
+    highlightNotice=T("stats_import_bad");
+    renderHighlights();
+  }
+}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-fetch-highlight]");if(!b)return;e.preventDefault();fetchHighlights(b.dataset.fetchHighlight);});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-add-highlight]");if(!b)return;e.preventDefault();addManualHighlight(b.dataset.addHighlight);});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-import-highlights]");if(!b)return;e.preventDefault();const inp=document.getElementById("highlightImport");if(inp)inp.click();});
+document.addEventListener("change",e=>{if(e.target&&e.target.id==="highlightImport"){const file=e.target.files&&e.target.files[0];if(file)importHighlightFile(file);e.target.value="";}});
+function renderStats(){const sum=document.getElementById("statsSummary");if(!sum)return;const gd=GL.filter(groupComplete).length,gm=completedGroupMatches(),km=completedKoMatches(),total=FX2.length+Object.keys(KOMETA).length,done=gm+km,today=todayFixtureCount(),atk=topAttack(),goals=totalGoals();const avg=done?(goals/done).toFixed(2):"0.00";const todayTxt=today===0?T("pulse_today_empty"):(today===1?T("pulse_today_one"):T("pulse_today_many").replace("{n}",today));const atkTxt=atk?(fl(atk.t)+" "+tn(atk.t)):T("pulse_no_scores");const atkSub=atk?(atk.gf+" "+T("stats_goals_label")) : T("pulse_attack_sub");sum.innerHTML=pulseCard(T("pulse_groups"),gd+" / "+GL.length,T("pulse_group_sub"),gd/GL.length*100)+pulseCard(T("pulse_logged"),done+" / "+total,T("pulse_logged_sub"),done/total*100)+pulseCard(T("pulse_today"),todayTxt,localDateLabel(todayKey()),today?100:0)+pulseCard(T("pulse_goals"),String(goals),T("pulse_goals_sub"),done?100:0)+pulseCard(T("pulse_avg"),avg,T("pulse_avg_sub"),done?100:0)+pulseCard(T("pulse_attack"),atkTxt,atkSub,atk?100:0);const teams=allTeamStats();const atkList=teams.filter(s=>s.gf>0).sort((a,b)=>b.gf-a.gf||b.gd-a.gd||b.pts-a.pts);const defList=teams.filter(s=>s.pld>0).sort((a,b)=>a.ga-b.ga||b.pld-a.pld||b.gd-a.gd||b.gf-a.gf);const ael=document.getElementById("statsAttack"),del=document.getElementById("statsDefence");if(ael)ael.innerHTML=statsRows(atkList,"gf");if(del)del.innerHTML=statsRows(defList,"ga");renderScorers();renderCards();renderHighlights();}
+function renderPulse(){renderStats();}
+function enhanceTabs(){const tabs=document.querySelector(".tabs");if(!tabs)return;tabs.setAttribute("role","tablist");tabs.setAttribute("aria-label",T("title_doc"));["G","M","K","S"].forEach(x=>{const b=document.getElementById("tab"+x),v=document.getElementById("view"+x);if(b){b.setAttribute("role","tab");b.setAttribute("aria-controls","view"+x);b.setAttribute("aria-selected",String(state.tab===x));}if(v){v.setAttribute("role","tabpanel");v.setAttribute("aria-labelledby","tab"+x);}});if(tabs.dataset.keysBound)return;tabs.dataset.keysBound="1";tabs.addEventListener("keydown",e=>{const order=["G","M","K","S"];if(!["ArrowRight","ArrowLeft","Home","End"].includes(e.key))return;e.preventDefault();let i=order.indexOf(state.tab);if(i<0)i=0;if(e.key==="ArrowRight")i=(i+1)%order.length;if(e.key==="ArrowLeft")i=(i+order.length-1)%order.length;if(e.key==="Home")i=0;if(e.key==="End")i=order.length-1;const id=order[i];show(id);const btn=document.getElementById("tab"+id);if(btn)btn.focus();});}
+
+function applyLang(){
+  document.documentElement.lang=lang==="pt"?"pt-BR":"en";
+  document.title=T("title_doc");
+  document.querySelectorAll("[data-i18n]").forEach(el=>{el.textContent=T(el.dataset.i18n);});
+  document.querySelectorAll("[data-i18n-html]").forEach(el=>{el.innerHTML=T(el.dataset.i18nHtml);});
+  const tz=tzLabel();
+  document.getElementById("timesNote").textContent=T("times_local")+(tz?" ("+tz+")":"");
+  document.getElementById("langBtn").textContent=T("lang_btn");
+  document.getElementById("footer").innerHTML="<div>"+T("footer")+" "+T("footer_times").replace("{tz}",tz||"—")+"</div>";
+  renderStandings();renderThirds();renderMatches();renderBracket();updateProg();renderStats();enhanceTabs();
+  if(wOpen)renderWatch();
+}
+function toggleLang(){lang=lang==="pt"?"en":"pt";state.lang=lang;save();applyLang();}
+applyLang();
+show(state.tab);
+</script>
+</body>
+</html>
